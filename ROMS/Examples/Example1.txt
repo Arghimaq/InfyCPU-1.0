@@ -1,0 +1,31 @@
+LDI 0 0 ;initialize R0 as 0. R0 = 0
+LDI 1 0 ;intialize R1 as 0. R1 = 1
+0 0 0 ;R0 is X and R1 is Y
+0 0 0 ;translate x y into address in vram
+BLT 0 1
+BLTr 2 0 ;R2 = the vram address
+0 0 0 ;set the color
+COP 6 7
+SUBi 7 7
+JZ 84 0 ;jump to draw new color
+ADDi 6 1
+0 0 0 ;continue here
+VST 2 6 ;draw it
+0 0 0 ;erase the old. R3 = old x, r4 = old y
+BLT 3 4
+BLTr 5 0
+VSTI 5 0
+0 0 0 ;set the rosetta stone
+COP 0 3
+COP 1 4
+0 0 0 ;increment
+ADDi 0 1
+ADDi 1 1
+0 0 0 ;Check if we reached the end
+SUBi 2 1023
+JZ 6 1
+0 0 0
+JMP 0 0
+0 0 0
+LDI 6 1
+JMP 33 0
