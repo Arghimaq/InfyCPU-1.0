@@ -196,9 +196,9 @@ If you prefer a 1-based ROM line number (human-friendly line number in ROM.txt):
 ROM_line_number = ROM_index + 1 = (source_line_number - 1) * 3 + operand_offset + 1
 
 Quick shorthand:
-- Opcode slot (1-based ROM line): (line - 1) * 3 + 1
-- Operand1 slot (1-based ROM line): (line - 1) * 3 + 2
-- Operand2 slot (1-based ROM line): (line - 1) * 3 + 3
+- Opcode slot (1-based ROM line): (line - 1) * 3 + 0
+- Operand1 slot (1-based ROM line): (line - 1) * 3 + 1
+- Operand2 slot (1-based ROM line): (line - 1) * 3 + 2
 
 Example
 
