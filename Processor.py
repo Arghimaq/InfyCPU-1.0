@@ -1,9 +1,18 @@
 import time
 import json
+import GraphicalProcessor as GPU
+
+#Bad apple(easter egg!)
+
+VIDEO_FRAME_BYTES = (
+    GPU.Screen_Width * GPU.Screen_Length + 7
+) // 8
+
+VIDEO_FILE = open("docs/bad_apple_1bpp.bin", "rb")
 
 #Initialize GPU
 
-import GraphicalProcessor as GPU
+
 
 GPU.load_data()
 
@@ -19,8 +28,8 @@ with open('settings.json', 'r') as f:
 	
 
 Instruction_Size = 3
-ROM_SIZE = settings.get("ram_size")
-RAM_SIZE = settings.get("rom_size")
+ROM_SIZE = settings.get("rom_size")
+RAM_SIZE = settings.get("ram_size")
 VRAM_Base_Address = 129
 
 #Initialize RAM and ROM
@@ -75,7 +84,10 @@ def get_rom():
 		#Convert into intergers
 		i = 0
 		for instruction in content:
-			content[i] = int(instruction)
+			try:
+				content[i] = int(instruction)
+			except ValueError:
+				content[i] = str(instruction)
 			i+=1
 		print(f"Converted into intergers: {content}")
 			
@@ -245,10 +257,10 @@ def run():
 
 	elif opcode == 40:		#INP. Listen for input without blocking
 		keyboard = GPU.listen()
-		if keyboard is not None:
+		if keyboard:
+			print("Received input")
 			Input_Flag = True
 			Registers[operand1] = keyboard
-			print("Received input")
 		else:
 			Input_Flag = False
 			
@@ -271,6 +283,25 @@ def run():
 			CMP_Flag = True
 		else:
 			CMP_Flag = False
+	
+	elif opcode == 52:		#CMPE. Turn on compare flag if equal
+		if Registers[operand1] == Registers[operand2]:
+			CMP_Flag = True
+		else:
+			CMP_Flag = False
+	
+	elif opcode == 53:		#CMPG. Turn on compare flag if greater
+		if Registers[operand1] > Registers[operand2]:
+			CMP_Flag = True
+		else:
+			CMP_Flag = False
+			
+	elif opcode == 54:		#CMPL. Turn on compare flag if greater
+		if Registers[operand1] < Registers[operand2]:
+			CMP_Flag = True
+		else:
+			CMP_Flag = False
+
 
 #Malicious--------------------------------------------------------------
 
@@ -279,6 +310,23 @@ def run():
 		
 	elif opcode == 1111:	#Print
 		print(Registers[operand1])
+	
+	elif opcode == 2222:	#VFRAME
+		
+		packed = VIDEO_FILE.read(VIDEO_FRAME_BYTES)
+
+		if len(packed) != VIDEO_FRAME_BYTES:
+			Machine_State = False
+		else:
+			pixels = []
+
+			for byte in packed:
+				for shift in range(7, -1, -1):
+					pixels.append((byte >> shift) & 1)
+
+			VRAM[:] = pixels[:len(VRAM)]
+
+			time.sleep(1 / 30)
 	
 def tickCPU():
 	global PC
@@ -290,11 +338,12 @@ def tickCPU():
 		Jump_Flag = False
 
 def tickGPU():
-	global VRAM
-	global Machine_State
-	GPU.update(VRAM)
-	if GPU.check_quit():
-		Machine_State = False
+    global VRAM, Machine_State
+
+    GPU.update(VRAM)
+
+    if not GPU.check_quit():
+        Machine_State = False
 	
 def cycle():
 	tickCPU()
@@ -316,6 +365,12 @@ print(f"""Final Results:
 	ROM = {ROM}
 	
 	RAM = {RAM}""")
+
+print("\nRegisters:")
+	
+for key in Registers:
+	print(f"{key}: {Registers[key]}")
+	
 
 print("\nRegisters:")
 	
