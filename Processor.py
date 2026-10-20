@@ -1,6 +1,26 @@
 import time
 import json
 import GraphicalProcessor as GPU
+from tkinter import filedialog
+import Compiler
+import os
+
+file = filedialog.askopenfilename(
+	title="Select an .iasm or .iexe",
+	filetypes=[("Infy Assembly Files", "*.iasm"),
+				("Infy executable files", "*.iexe")
+	]
+)
+
+ext = os.path.splitext(file)[1]
+
+if ext == ".iasm":
+	machine_code = Compiler.compile(file)
+	print("file is iasm")
+elif ext == ".iexe":
+	with open(file, 'r') as f:
+		machine_code = f.read().split()
+		print("file is iexe")
 
 #Bad apple(easter egg!)
 
@@ -74,31 +94,39 @@ CMP_Flag = False
 
 #Functions
 
-def get_rom():
+def get_rom(rom):
 	global ROM
-	with open ("ROM.txt",'r') as f:
-		
-		content = f.read().split()
-		
-		print(f"Got ROM.txt: {content}")
-		#Convert into intergers
-		i = 0
-		for instruction in content:
-			try:
-				content[i] = int(instruction)
-			except ValueError:
-				content[i] = str(instruction)
-			i+=1
-		print(f"Converted into intergers: {content}")
+	if rom == "Legacy":
+		with open ("ROM.txt",'r') as f:
 			
-		#Putting into ROM
-		leftover = len(ROM) - len(content)
-		if leftover >= 0:
-			ROM = content
-			for x in range(leftover):
-				ROM.append(0)
-		else:
-			print("ROM.txt exeeds ROM size!")
+			content = f.read().split()
+			
+			print(f"Got ROM.txt: {content}")
+			#Convert into intergers
+			i = 0
+			for instruction in content:
+				try:
+					content[i] = int(instruction)
+				except ValueError:
+					content[i] = str(instruction)
+				i+=1
+			print(f"Converted into intergers: {content}")
+				
+			#Putting into ROM
+			leftover = len(ROM) - len(content)
+			if leftover >= 0:
+				ROM = content
+				for x in range(leftover):
+					ROM.append(0)
+			else:
+				print("ROM.txt exeeds ROM size!")
+	else:
+		ROM = []
+		for inst in rom:
+			ROM.append(inst)
+		leftover = ROM_SIZE - len(rom)
+		for i in range(leftover):
+			ROM.append(0)
 			
 def fetch():
 	global ROM
