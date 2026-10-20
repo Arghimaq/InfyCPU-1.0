@@ -1,0 +1,72 @@
+; Bouncing ball for a 64x48 pixel screen
+; R0=x, R1=y, R2=vx, R3=vy, R6=VRAM pixel address
+; 5-pixel white circle approximation; gravity and velocity use integer steps.
+; Jump operands are absolute ROM positions, measured in cells (3 per instruction).
+LDI 0 16 ; R0 = x position
+LDI 1 8 ; R1 = y position
+LDI 2 1 ; R2 = horizontal velocity
+LDI 3 0 ; R3 = vertical velocity
+; LOOP (PC=12)
+BLT 0 1 ; Get the current pixel address
+BLTR 6 0 ; R6 = address of ball centre
+VSTI 6 0 ; Erase centre
+SUBI 6 1
+VSTI 6 0 ; Erase left pixel
+ADDI 6 1
+ADDI 6 1
+VSTI 6 0 ; Erase right pixel
+SUBI 6 1
+SUBI 6 64
+VSTI 6 0 ; Erase top pixel
+ADDI 6 64
+ADDI 6 64
+VSTI 6 0 ; Erase bottom pixel
+SUBI 6 64
+ADDI 3 1 ; Gravity: vy += 1
+ADD 0 2 ; Update x: x += vx
+ADD 1 3 ; Update y: y += vy
+; CHECK_RIGHT (PC=66)
+CMPGI 0 62 ; Check right wall
+JCMP 138 0 ; Jump if x > right limit
+; CHECK_LEFT (PC=72)
+CMPGI 0 0 ; Check left wall
+JCMP 147 1 ; Jump if x <= 0
+; CHECK_BOTTOM (PC=78)
+CMPGI 1 46 ; Check floor
+JCMP 156 0 ; Jump if y > floor limit
+; CHECK_TOP (PC=84)
+CMPGI 1 0 ; Check ceiling
+JCMP 165 1 ; Jump if y <= 0
+; DRAW (PC=90)
+BLT 0 1 ; Get new ball address
+BLTR 6 0 ; R6 = address of ball centre
+VSTI 6 1 ; Draw centre in white
+SUBI 6 1
+VSTI 6 1 ; Draw left pixel
+ADDI 6 1
+ADDI 6 1
+VSTI 6 1 ; Draw right pixel
+SUBI 6 1
+SUBI 6 64
+VSTI 6 1 ; Draw top pixel
+ADDI 6 64
+ADDI 6 64
+VSTI 6 1 ; Draw bottom pixel
+SUBI 6 64
+JMP 12 0 ; Repeat forever
+; RIGHT (PC=138)
+LDI 0 62 ; Clamp x to right edge
+MULI 2 -1 ; Reverse horizontal velocity
+JMP 72 0
+; LEFT (PC=147)
+LDI 0 1 ; Clamp x to left edge
+MULI 2 -1 ; Reverse horizontal velocity
+JMP 78 0
+; BOTTOM (PC=156)
+LDI 1 46 ; Clamp y to floor
+MULI 3 -1 ; Reverse vertical velocity
+JMP 84 0
+; TOP (PC=165)
+LDI 1 1 ; Clamp y to ceiling
+MULI 3 -1 ; Reverse vertical velocity
+JMP 90 0
