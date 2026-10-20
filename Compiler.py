@@ -1,4 +1,4 @@
-Instruction_List = {
+ISA = {
     # Memory
     "ST": 1,
     "LD": 2,
@@ -21,9 +21,12 @@ Instruction_List = {
     
     # Comparision
     
-    "CMPei": 50,
-    "CMPgi": 51,
-    "CMPli": 52,
+    "CMPEI": 50,
+    "CMPGI": 51,
+    "CMPLI": 52,
+    "CMPE": 53,
+    "CMPG": 54,
+    "CMPL": 55,
     
     # Control
     
@@ -46,41 +49,98 @@ Instruction_List = {
     
     # Malicious
     "HALT": 999,
-    "PRINT": 1111
+    "PRINT": 1111,
+    "VFRAME": 2222
+    
+
+        
 }
 
-from tkinter import filedialog as fd
+labels = {
+		
+}
 
-filename = fd.askopenfilename(title="Choose ROM(txt file)", filetypes = (
-        ('text files', '*.txt'),
-    ))
-
-print(Instruction_List)
-
-decompiled = []
-compiled = []
-
-
-
-with open(filename, 'r') as f:
-	for line in f:
-		decompiled += line.split(';')[0].split()
-
-def compile():
-	global Instruction_List
-	for instruction in decompiled:
-		key = instruction.upper()
-		if key in Instruction_List.keys():
-			compiled.append(Instruction_List.get(key))
-		else:
-			compiled.append(instruction)
-
+def readfile(file):
+	with open(file, 'r') as f:
+		lines = [s.replace('\n', '') for s in f.readlines()]
+		for i, line in enumerate(lines):
+			lines[i] = line.split(';')[0]
 			
-compile()
+		return lines
 
-with open('ROM.txt', 'w') as f:
-	for instruction in compiled:
-		f.write(str(instruction) + '\n')
+def pass1(rom):
+	d = {}
+	address = 0
+	for instruction in rom:
+		try:
+			if instruction[0] == '$':	#Label prefix
+				full = instruction[1:-1]
+				d.update({full: address})
+			address+=3 
+		except IndexError:
+			continue
+	return d
+	
+def remove_labels(rom):
+	cleared = []
+	for line in rom:
+		try:
+			if line[0] == '$':
+				cleared.append("0 0 0")
+			else:
+				cleared.append(line)
+		except IndexError:
+			continue
+	return cleared
+	
+def split_rom(rom):
+	decompiled = []
+	for instruction in rom:
+		for op in instruction.split():
+			decompiled.append(op)
+	return decompiled
 
-print(decompiled)
-print(compiled)
+def pass2(rom):
+	global ISA
+	global labels
+	compiled = []
+	
+	for instruction in rom:
+		key = instruction.upper()
+		if key in ISA.keys():
+			compiled.append(ISA.get(key))
+			print("got an opcode: " + key)
+		
+		else:	#If it starts with $
+			if instruction[0] == '$':
+				print("got a address: " + instruction)
+				if instruction[1:] in labels.keys():
+					print("instruction is in labels")
+					compiled.append(labels[instruction[1:]])
+			else:
+				compiled.append(instruction)
+	
+	return compiled
+	
+	#Assembling to machine code
+	
+def compile(file):
+	global labels
+	
+	try:
+		machine_code = readfile(file)
+	except FileNotFoundError:
+		print(f"File '{file}' not found")
+		return False
+		
+	labels = pass1(machine_code)
+	
+	machine_code = remove_labels(machine_code)
+	machine_code = split_rom(machine_code)
+	machine_code = pass2(machine_code)
+	for i, instruction in enumerate(machine_code):
+		machine_code[i] = int(instruction)
+	
+	return machine_code
+	
+
