@@ -6,6 +6,9 @@ ISA = {
     "LDI": 4,
     "SWP": 5,
     "COP": 6,
+	"PUSH": 7,
+    "PUSHI": 8,
+    "POP": 9
     
     # ALU
     "ADD": 10,
@@ -34,6 +37,11 @@ ISA = {
     "JZ": 21,
     "JINP": 22,
     "JCMP": 23,
+	"CALL": 24,
+    "CLLZ": 25,
+    "CLLNP": 26,
+    "CLLCMP": 27,
+    "RET": 28,
     
     # Video
     
