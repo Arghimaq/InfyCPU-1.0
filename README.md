@@ -5,7 +5,7 @@ Added stack, call, ret, removed settings.py and fixed the `.iexe` bug
 # InfyCPU 1.5
 
 <img width="200" height="200" alt="python_uac8REw7OP" src="https://github.com/user-attachments/assets/1eacf84d-ccbd-45db-9de8-36d0369bcf0d" />
-*(Flying Pixel.iasm, ran by InfyCPU)*
+Flying Pixel.iasm, ran by InfyCPU. Required size: 32x32. Minimum ROM size: 32
 
 
 
@@ -73,6 +73,9 @@ If you want to run someone else's program, look inside the `.iasm` file and look
 ## Made something?
 
 If you have made a program, you can share it in Github Discussions in the Show and tell category. I'd love to see others' creations!
+
+<img width="800" height="600" alt="python_3RG2Bh3tYf" src="https://github.com/user-attachments/assets/726d873a-d2df-46c5-86a6-e464425e29b3" />
+Platformer.iasm, ran by InfyCPU. Required size: 64x48. Minimum ROM size: 200
 
 ## Notes
 
