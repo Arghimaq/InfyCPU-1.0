@@ -24,7 +24,7 @@ pip install pygame-ce
 
 Next, install the repo by either downloading the ZIP file, or cloning it:
 ```bash
-git clone https://github.com/Arghimaq/InfyCPU-1.5
+git clone https://github.com/Arghimaq/InfyCPU-2
 ```
 
 ## How to use it
