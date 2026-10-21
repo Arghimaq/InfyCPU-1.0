@@ -9,6 +9,9 @@
 | `4` | `LDI` | `dst` `imm` | Load immediate value into a register |
 | `5` | `SWP` | `reg` `reg` | Swap register values |
 | `6` | `COP` | `src` `dst` | Copy register value into a register |
+| `7` | `PUSH` | `reg` `none` | Push a register value into stack |
+| `8` | `PUSHi` | `imm` `none` | Push an immediate value into stack |
+| `9` | `POP` | `dst` `none` | Pop a value from the stack and load into a register |
 | `10` | `ADD` | `src` `val` | Add a register's value into a register |
 | `11` | `SUB` | `src` `val` | Subtract a register's value from a register |
 | `12` | `MUL` | `src` `val` | Multiplay a register's value with a register |
@@ -27,6 +30,11 @@
 | `21` | `JZ` | `label/address` `inverse` | Jump to label or address if the zero flag is true. Inverse if second operand is not 0 |
 | `22` | `JINP` | `label/address` `inverse` | Jump to label or address if the input flag is true. Inverse if second operand is not 0 |
 | `23` | `JCMP` | `label/address` `inverse` | Jump to label or address if the compare flag is true. Inverse if second operand is not 0 |
+| `24` | `CALL` | `label/address` `none` | Jump to label or address and push next instruction's address into stack |
+| `25` | `CLLZ` | `label/address` `inverse` | Jump to label or address and push next instruction's address into stack if the zero flag is true. Inverse if second operand is not 0 |
+| `26` | `CLLNP` | `label/address` `inverse` | Jump to label or address and push next instruction's address into stack if the input flag is true. Inverse if second operand is not 0 |
+| `27` | `CLLCMP` | `label/address` `inverse` | Jump to label or address and push next instruction's address into stack if the compare flag is true. Inverse if second operand is not 0 |
+| `28` | `RET` | `none` `none` | Pop from stack and jump to the value as address |
 | `40` | `INP` | `dst` `none` | Set input flag to true if input received, and load pressed key into a register |
 | `30` | `VST` | `addr` `clr` | Store the color value at a register into frame buffer address at a register value |
 | `31` | `VSTI` | `addr` `clr` | Store the immediate color value at a register into frame buffer address at a register value |
@@ -76,3 +84,20 @@ Calculating the memory address of a coordinate on the screen by hand or on the C
 | Jump Flag | Activated by `JMP` opcodes |
 | Zero Flag | Activated if last arithmetic operation resulted to 0 |
 | Input Flag | Activated if `INP` catched an input |
+
+## Notes
+
+For some opcodes like `POP`, `INP`, `JMP` or `RET` you do not need to use all operands, however it does not mean you should include nothing in the operand's place. You must put a number in it, so
+```.iasm
+RET
+POP 4
+INP 3
+JMP $loop
+```
+will create errors. instead make placeholders
+```.iasm
+RET 0 0
+POP 4 0
+INP 3 0
+JMP $loop 0
+```
