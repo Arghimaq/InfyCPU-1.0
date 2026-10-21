@@ -4,6 +4,7 @@ import GraphicalProcessor as GPU
 from tkinter import filedialog
 import Compiler
 import os
+import sys
 
 file = filedialog.askopenfilename(
 	title="Select an .iasm or .iexe",
@@ -22,13 +23,14 @@ elif ext == ".iexe":
 		machine_code = f.read().split()
 		print("file is iexe")
 
+
 #Bad apple(easter egg!)
 
 VIDEO_FRAME_BYTES = (
     GPU.Screen_Width * GPU.Screen_Length + 7
 ) // 8
 
-VIDEO_FILE = open("docs/bad_apple_1bpp.bin", "rb")
+VIDEO_FILE = open("statistics/bad_apple_1bpp.bin", "rb")
 
 #Initialize GPU
 
@@ -50,14 +52,16 @@ with open('settings.json', 'r') as f:
 Instruction_Size = 3
 ROM_SIZE = settings.get("rom_size")
 RAM_SIZE = settings.get("ram_size")
+STACK_SIZE = settings.get("stack_size")
 VRAM_Base_Address = 129
 
-#Initialize RAM and ROM
+#Initialize RAM, ROM and Stack
 
 ROM = [0] * (Instruction_Size * ROM_SIZE)
 RAM = [0] * RAM_SIZE
+Stack = [0] * STACK_SIZE
 
-#Initialize Registers and PC
+#Initialize Registers and Counters
 
 Accumulator = 0
 
@@ -82,6 +86,21 @@ Registers = {
 } 
 
 PC = 0
+SP = 0
+
+#Stack Manipulation
+
+def push(val):
+	global Stack, SP
+	Stack[SP] = val
+	SP+=1
+
+def pop():
+	global Stack, SP, Registers
+	SP-=1
+	val = Stack[SP]
+	Stack[SP] = 0
+	return val
 
 #Initialize flags
 
@@ -94,7 +113,7 @@ CMP_Flag = False
 
 #Functions
 
-def get_rom(rom):
+def get_rom(rom, ext):
 	global ROM
 	if rom == "Legacy":
 		with open ("ROM.txt",'r') as f:
@@ -121,12 +140,27 @@ def get_rom(rom):
 			else:
 				print("ROM.txt exeeds ROM size!")
 	else:
-		ROM = []
-		for inst in rom:
-			ROM.append(inst)
-		leftover = ROM_SIZE - len(rom)
-		for i in range(leftover):
-			ROM.append(0)
+		if ext == ".iasm":
+			ROM = []
+			for inst in rom:
+				ROM.append(inst)
+			leftover = ROM_SIZE - len(rom)
+			for i in range(leftover):
+				ROM.append(0)
+		else:
+			rom2 = []
+			for inst in rom:
+				try:
+					rom2.append(int(inst))
+				except ValueError:
+					rom2.append(inst)
+			ROM = rom2
+			leftover = ROM_SIZE - len(rom)
+			print(leftover)
+			for i in range(leftover):
+				ROM.append(0)
+			
+				
 			
 def fetch():
 	global ROM
@@ -173,6 +207,15 @@ def run():
 		
 	elif opcode == 6:		#COP. Copy register value
 		Registers[operand2] = Registers[operand1]
+	
+	elif opcode == 7:		#PUSH. Push a register value into stack
+		push(Registers[operand1])
+	
+	elif opcode == 8:		#PUSHi. Push an immediate value into stack
+		push(operand1)
+	
+	elif opcode == 9:		#POP. Pop a value from the stack into a register
+		Registers[operand1] = pop()
 		
 #ALU--------------------------------------------------------------------
 
@@ -233,6 +276,7 @@ def run():
 	elif opcode == 20:		#JMP. Jump.
 		PC = operand1
 		Jump_Flag = True
+		print(f"Jumped to {PC}")
 	
 	elif opcode == 21:		#JZ. Jump if last operation was zero. if operand1 is not zero, inverse
 		if operand2 == 0:
@@ -263,6 +307,53 @@ def run():
 			if not CMP_Flag:
 				PC = operand1
 				Jump_Flag = True
+	
+	elif opcode == 24:		#CALL. Call a subroutine
+		push(PC+3)
+		PC = operand1
+		Jump_Flag = True
+	
+	elif opcode == 25:		#CLLZ. Call a subroutine if last arithemtic operation resulted to 0. if operand2 is not zero, inverse
+		if operand2 == 0:
+			if Zero_Flag:
+				push(PC+3)
+				PC = operand1
+				Jump_Flag = True
+		else:
+			if not Zero_Flag:
+				push(PC+3)
+				PC = operand1
+				Jump_Flag = True
+		
+	
+	elif opcode == 26:		#CLLNP. Call a subroutine if input was received. if operand2 is not zero, inverse
+		if operand2 == 0:
+			if Input_Flag:
+				push(PC+3)
+				PC = operand1
+				Jump_Flag = True
+		else:
+			if not Input_Flag:
+				push(PC+3)
+				PC = operand1
+				Jump_Flag = True
+	
+	elif opcode == 27:		#CLLCMP. Call a subroutine if compare flag is true. if operand2 is not zero, inverse
+		if operand2 == 0:
+			if CMP_Flag:
+				push(PC+3)
+				PC = operand1
+				Jump_Flag = True
+		else:
+			if not CMP_Flag:
+				push(PC+3)
+				PC = operand1
+				Jump_Flag = True
+	
+	elif opcode == 28:		#RET. Pop and jump to value
+		PC = pop()
+		Jump_Flag = True
+		
 		
 #Video Memory-----------------------------------------------------------
 
@@ -378,7 +469,7 @@ def cycle():
 	tickGPU()
 	
 
-get_rom()
+get_rom(machine_code, ext)
 
 print("Running...")
 	
