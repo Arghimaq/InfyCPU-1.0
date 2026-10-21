@@ -2,7 +2,7 @@
 
 Added stack, call, ret, removed settings.py and fixed the `.iexe` bug
 
-# InfyCPU 1.5
+# InfyCPU 2
 
 <img width="200" height="200" alt="python_uac8REw7OP" src="https://github.com/user-attachments/assets/1eacf84d-ccbd-45db-9de8-36d0369bcf0d" />
 Flying Pixel.iasm, ran by InfyCPU. Required size: 32x32. Minimum ROM size: 32
