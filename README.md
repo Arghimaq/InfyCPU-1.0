@@ -4,6 +4,9 @@ Added stack, call, ret, removed settings.py and fixed the `.iexe` bug
 
 # InfyCPU 1.5
 
+<img width="400" height="400" alt="python_uac8REw7OP" src="https://github.com/user-attachments/assets/1eacf84d-ccbd-45db-9de8-36d0369bcf0d" />
+
+
 InfyCPU Emulator is a custom, toy CPU Emulator. It has a basic ISA and has a screen. The screen is controlled by the Graphical Processor meanwhile other stuff like memory, registers, arithmetics are controlled by the normal Processor. You can adjust the ROM size, RAM size, emulated screen size and window size. A few examples of programs are included in the [Examples](Programs/Examples) folder.
 
 ## How to install
