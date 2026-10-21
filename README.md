@@ -74,7 +74,7 @@ If you want to run someone else's program, look inside the `.iasm` file and look
 
 If you have made a program, you can share it in Github Discussions in the Show and tell category. I'd love to see others' creations!
 
-<img width="800" height="600" alt="python_3RG2Bh3tYf" src="https://github.com/user-attachments/assets/726d873a-d2df-46c5-86a6-e464425e29b3" />
+<img width="320" height="240" alt="python_3RG2Bh3tYf" src="https://github.com/user-attachments/assets/726d873a-d2df-46c5-86a6-e464425e29b3" />
 Platformer.iasm, ran by InfyCPU. Required size: 64x48. Minimum ROM size: 200
 
 ## Notes
