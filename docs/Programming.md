@@ -59,6 +59,12 @@ $loop:
   jmp $loop 0
 ```
 You have to write the beginning of the loop with its label with a $ before the name at the top, and reference it in jmp using a $. However this doesnt mean you cant do immediate numbers anymore. Most programs in the examples directory use immediate addresses.
+Calls and returns was also recently added. You can call a subroutine using `CALL $subroutine 0 `, and inside a subroutine to come back to the main loop you can do `RET 0 0`. subroutines look like this:
+```.iasm
+$subroutine:
+  ;do something
+  RET 0 0
+```
 
 ## Video
 If you want a pixel to have a color, you must assign its color using either `VST` or `VSTI`. the second operand `clr` is not RGB. It uses a color palette:
