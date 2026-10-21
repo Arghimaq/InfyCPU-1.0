@@ -8,7 +8,7 @@ ISA = {
     "COP": 6,
 	"PUSH": 7,
     "PUSHI": 8,
-    "POP": 9
+    "POP": 9,
     
     # ALU
     "ADD": 10,
