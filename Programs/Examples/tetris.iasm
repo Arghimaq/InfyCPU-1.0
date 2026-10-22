@@ -1,0 +1,3575 @@
+$start:
+CALL $clear_board 0 ; initialize board memory
+STI 0 3
+STI 1 0
+STI 2 0
+STI 3 0
+STI 4 0
+STI 5 0
+STI 6 0
+STI 7 0
+STI 8 0
+STI 21 0
+STI 22 0
+CALL $clear_side 0
+CALL $draw_border 0
+CALL $spawn_piece 0
+JMP $main 0
+$main:
+LD 0 21
+CMPEI 0 1
+JCMP $gameover_loop 0
+INP 16 0
+JINP $key_dispatch 0
+JMP $timer 0
+$key_dispatch:
+CMPEI 16 left
+JCMP $key_left 0
+CMPEI 16 right
+JCMP $key_right 0
+CMPEI 16 down
+JCMP $key_down 0
+CMPEI 16 up
+JCMP $key_rotate 0
+CMPEI 16 space
+JCMP $key_space 0
+JMP $timer 0
+$key_left:
+LD 0 0
+SUBI 0 1
+ST 9 0
+LD 0 1
+ST 10 0
+LD 0 3
+ST 11 0
+CALL $apply_candidate 0
+JMP $timer 0
+$key_right:
+LD 0 0
+ADDI 0 1
+ST 9 0
+LD 0 1
+ST 10 0
+LD 0 3
+ST 11 0
+CALL $apply_candidate 0
+JMP $timer 0
+$key_rotate:
+LD 0 0
+ST 9 0
+LD 0 1
+ST 10 0
+LD 0 3
+ADDI 0 1
+CMPEI 0 4
+JCMP $rotate_wrap 0
+ST 11 0
+JMP $rotate_apply 0
+$rotate_wrap:
+LDI 0 0
+ST 11 0
+$rotate_apply:
+CALL $apply_candidate 0
+JMP $timer 0
+$key_down:
+LD 0 0
+ST 9 0
+LD 0 1
+ADDI 0 1
+ST 10 0
+LD 0 3
+ST 11 0
+CALL $apply_candidate 0
+LD 0 7
+CMPEI 0 1
+JCMP $key_down_lock 0
+JMP $timer 0
+$key_down_lock:
+CALL $lock_and_spawn 0
+JMP $timer 0
+$key_space:
+$hard_drop_loop:
+LD 0 0
+ST 9 0
+LD 0 1
+ADDI 0 1
+ST 10 0
+LD 0 3
+ST 11 0
+CALL $apply_candidate 0
+LD 0 7
+CMPEI 0 1
+JCMP $hard_drop_lock 0
+JMP $hard_drop_loop 0
+$hard_drop_lock:
+CALL $lock_and_spawn 0
+JMP $timer 0
+$timer:
+LD 0 5
+ADDI 0 1
+ST 5 0
+CMPLi 0 220
+JCMP $main 0
+STI 5 0
+LD 0 0
+ST 9 0
+LD 0 1
+ADDI 0 1
+ST 10 0
+LD 0 3
+ST 11 0
+CALL $apply_candidate 0
+LD 0 7
+CMPEI 0 1
+JCMP $gravity_lock 0
+JMP $main 0
+$gravity_lock:
+CALL $lock_and_spawn 0
+JMP $main 0
+$gameover_loop:
+INP 16 0
+JINP $gameover_key 0
+JMP $gameover_loop 0
+$gameover_key:
+CMPEI 16 space
+JCMP $restart 0
+JMP $gameover_loop 0
+$restart:
+CALL $clear_board 0
+STI 0 3
+STI 1 0
+STI 2 0
+STI 3 0
+STI 4 0
+STI 5 0
+STI 6 0
+STI 7 0
+STI 8 0
+STI 21 0
+STI 22 0
+CALL $redraw_board 0
+CALL $clear_side 0
+CALL $draw_border 0
+CALL $spawn_piece 0
+JMP $main 0
+$clear_board:
+STI 64 0
+STI 65 0
+STI 66 0
+STI 67 0
+STI 68 0
+STI 69 0
+STI 70 0
+STI 71 0
+STI 72 0
+STI 73 0
+STI 74 0
+STI 75 0
+STI 76 0
+STI 77 0
+STI 78 0
+STI 79 0
+STI 80 0
+STI 81 0
+STI 82 0
+STI 83 0
+STI 84 0
+STI 85 0
+STI 86 0
+STI 87 0
+STI 88 0
+STI 89 0
+STI 90 0
+STI 91 0
+STI 92 0
+STI 93 0
+STI 94 0
+STI 95 0
+STI 96 0
+STI 97 0
+STI 98 0
+STI 99 0
+STI 100 0
+STI 101 0
+STI 102 0
+STI 103 0
+STI 104 0
+STI 105 0
+STI 106 0
+STI 107 0
+STI 108 0
+STI 109 0
+STI 110 0
+STI 111 0
+STI 112 0
+STI 113 0
+STI 114 0
+STI 115 0
+STI 116 0
+STI 117 0
+STI 118 0
+STI 119 0
+STI 120 0
+STI 121 0
+STI 122 0
+STI 123 0
+STI 124 0
+STI 125 0
+STI 126 0
+STI 127 0
+STI 128 0
+STI 129 0
+STI 130 0
+STI 131 0
+STI 132 0
+STI 133 0
+STI 134 0
+STI 135 0
+STI 136 0
+STI 137 0
+STI 138 0
+STI 139 0
+STI 140 0
+STI 141 0
+STI 142 0
+STI 143 0
+STI 144 0
+STI 145 0
+STI 146 0
+STI 147 0
+STI 148 0
+STI 149 0
+STI 150 0
+STI 151 0
+STI 152 0
+STI 153 0
+STI 154 0
+STI 155 0
+STI 156 0
+STI 157 0
+STI 158 0
+STI 159 0
+STI 160 0
+STI 161 0
+STI 162 0
+STI 163 0
+STI 164 0
+STI 165 0
+STI 166 0
+STI 167 0
+STI 168 0
+STI 169 0
+STI 170 0
+STI 171 0
+STI 172 0
+STI 173 0
+STI 174 0
+STI 175 0
+STI 176 0
+STI 177 0
+STI 178 0
+STI 179 0
+STI 180 0
+STI 181 0
+STI 182 0
+STI 183 0
+STI 184 0
+STI 185 0
+STI 186 0
+STI 187 0
+STI 188 0
+STI 189 0
+STI 190 0
+STI 191 0
+STI 192 0
+STI 193 0
+STI 194 0
+STI 195 0
+STI 196 0
+STI 197 0
+STI 198 0
+STI 199 0
+STI 200 0
+STI 201 0
+STI 202 0
+STI 203 0
+STI 204 0
+STI 205 0
+STI 206 0
+STI 207 0
+STI 208 0
+STI 209 0
+STI 210 0
+STI 211 0
+STI 212 0
+STI 213 0
+STI 214 0
+STI 215 0
+STI 216 0
+STI 217 0
+STI 218 0
+STI 219 0
+STI 220 0
+STI 221 0
+STI 222 0
+STI 223 0
+RET 0 0
+$draw_pixel:
+BLT 0 1
+BLTR 2 0
+VST 2 15
+RET 0 0
+$draw_tile:
+COP 13 0
+MULI 0 2
+ADDI 0 5
+COP 14 1
+MULI 1 2
+ADDI 1 3
+CALL $draw_pixel 0
+ADDI 1 1
+CALL $draw_pixel 0
+SUBI 1 1
+ADDI 0 1
+CALL $draw_pixel 0
+ADDI 1 1
+CALL $draw_pixel 0
+RET 0 0
+$draw_preview_tile:
+COP 13 0
+MULI 0 2
+ADDI 0 30
+COP 14 1
+MULI 1 2
+ADDI 1 4
+CALL $draw_pixel 0
+ADDI 1 1
+CALL $draw_pixel 0
+SUBI 1 1
+ADDI 0 1
+CALL $draw_pixel 0
+ADDI 1 1
+CALL $draw_pixel 0
+RET 0 0
+$clear_side:
+LDI 0 2
+ST 17 0
+$clear_side_y:
+LD 0 17
+CMPGI 0 37
+JCMP $clear_side_done 0
+LDI 0 28
+ST 18 0
+$clear_side_x:
+LD 0 18
+CMPGI 0 47
+JCMP $clear_side_next_y 0
+LD 0 18
+LD 1 17
+LDI 15 0
+CALL $draw_pixel 0
+LD 0 18
+ADDI 0 1
+ST 18 0
+JMP $clear_side_x 0
+$clear_side_next_y:
+LD 0 17
+ADDI 0 1
+ST 17 0
+JMP $clear_side_y 0
+$clear_side_done:
+RET 0 0
+$draw_border:
+LDI 15 1
+LDI 0 4
+LDI 1 2
+$border_top:
+CALL $draw_pixel 0
+ADDI 0 1
+CMPGI 0 25
+JCMP $border_top_done 0
+JMP $border_top 0
+$border_top_done:
+LDI 0 4
+LDI 1 35
+$border_bottom:
+CALL $draw_pixel 0
+ADDI 0 1
+CMPGI 0 25
+JCMP $border_bottom_done 0
+JMP $border_bottom 0
+$border_bottom_done:
+LDI 0 4
+LDI 1 2
+$border_left:
+CALL $draw_pixel 0
+ADDI 1 1
+CMPGI 1 34
+JCMP $border_left_done 0
+JMP $border_left 0
+$border_left_done:
+LDI 0 25
+LDI 1 2
+$border_right:
+CALL $draw_pixel 0
+ADDI 1 1
+CMPGI 1 34
+JCMP $border_right_done 0
+JMP $border_right 0
+$border_right_done:
+LDI 15 7
+LDI 0 27
+LDI 1 2
+$border_sep:
+CALL $draw_pixel 0
+ADDI 1 1
+CMPGI 1 35
+JCMP $border_done 0
+JMP $border_sep 0
+$border_done:
+RET 0 0
+$clear_preview:
+LDI 0 3
+ST 17 0
+$clear_preview_y:
+LD 0 17
+CMPGI 0 12
+JCMP $clear_preview_done 0
+LDI 0 29
+ST 18 0
+$clear_preview_x:
+LD 0 18
+CMPGI 0 39
+JCMP $clear_preview_next_y 0
+LD 0 18
+LD 1 17
+LDI 15 0
+CALL $draw_pixel 0
+LD 0 18
+ADDI 0 1
+ST 18 0
+JMP $clear_preview_x 0
+$clear_preview_next_y:
+LD 0 17
+ADDI 0 1
+ST 17 0
+JMP $clear_preview_y 0
+$clear_preview_done:
+RET 0 0
+$set_piece_color:
+LD 0 2
+ADDI 0 1
+ST 15 0
+RET 0 0
+$draw_current:
+STI 8 0
+$draw_current_loop:
+LD 0 8
+CMPEI 0 4
+JCMP $draw_current_done 0
+LD 12 8
+CALL $get_block 0
+LD 0 0
+ADD 13 0
+LD 0 1
+ADD 14 0
+LD 15 15
+CALL $draw_tile 0
+LD 0 8
+ADDI 0 1
+ST 8 0
+JMP $draw_current_loop 0
+$draw_current_done:
+RET 0 0
+$draw_preview:
+LD 0 2
+ST 23 0
+LD 0 3
+ST 24 0
+CALL $clear_preview 0
+LD 0 4
+ST 2 0
+STI 3 0
+LD 0 4
+ADDI 0 1
+ST 15 0
+STI 8 0
+$draw_preview_loop:
+LD 0 8
+CMPEI 0 4
+JCMP $draw_preview_done 0
+LD 12 8
+CALL $get_block 0
+LD 15 15
+CALL $draw_preview_tile 0
+LD 0 8
+ADDI 0 1
+ST 8 0
+JMP $draw_preview_loop 0
+$draw_preview_done:
+LD 0 23
+ST 2 0
+LD 0 24
+ST 3 0
+RET 0 0
+$draw_line_marker:
+LD 0 6
+CMPGI 0 16
+JCMP $draw_line_marker_done 0
+LDI 1 35
+SUB 1 0
+LDI 0 30
+LDI 15 5
+CALL $draw_pixel 0
+ADDI 0 1
+CALL $draw_pixel 0
+ADDI 0 1
+CALL $draw_pixel 0
+ADDI 0 1
+CALL $draw_pixel 0
+$draw_line_marker_done:
+RET 0 0
+$redraw_board:
+STI 17 0
+$redraw_row:
+LD 0 17
+CMPGI 0 15
+JCMP $redraw_done 0
+STI 18 0
+$redraw_col:
+LD 0 18
+CMPGI 0 9
+JCMP $redraw_next_row 0
+LD 3 17
+MULI 3 10
+LD 0 18
+ADD 3 0
+CALL $grid_read 0
+COP 4 15
+LD 13 18
+LD 14 17
+CALL $draw_tile 0
+LD 0 18
+ADDI 0 1
+ST 18 0
+JMP $redraw_col 0
+$redraw_next_row:
+LD 0 17
+ADDI 0 1
+ST 17 0
+JMP $redraw_row 0
+$redraw_done:
+RET 0 0
+$spawn_piece:
+LD 0 4
+ST 2 0
+ADDI 0 1
+CMPLi 0 7
+JCMP $spawn_next_ok 0
+LDI 0 0
+$spawn_next_ok:
+ST 4 0
+STI 0 3
+STI 1 0
+STI 3 0
+STI 5 0
+CALL $draw_preview 0
+CALL $check_collision 0
+LD 0 7
+CMPEI 0 1
+JCMP $spawn_gameover 0
+CALL $set_piece_color 0
+CALL $draw_current 0
+RET 0 0
+$spawn_gameover:
+STI 21 1
+CALL $draw_gameover_border 0
+RET 0 0
+$draw_gameover_border:
+LDI 15 2
+LDI 0 4
+LDI 1 2
+$gameover_border_loop:
+CALL $draw_pixel 0
+ADDI 0 1
+CMPGI 0 25
+JCMP $gameover_border_done 0
+JMP $gameover_border_loop 0
+$gameover_border_done:
+RET 0 0
+$apply_candidate:
+STI 15 0
+CALL $draw_current 0
+LD 0 0
+ST 12 0
+LD 0 1
+ST 13 0
+LD 0 3
+ST 14 0
+LD 0 9
+ST 0 0
+LD 0 10
+ST 1 0
+LD 0 11
+ST 3 0
+CALL $check_collision 0
+LD 0 7
+CMPEI 0 1
+JCMP $apply_blocked 0
+CALL $set_piece_color 0
+CALL $draw_current 0
+RET 0 0
+$apply_blocked:
+LD 0 12
+ST 0 0
+LD 0 13
+ST 1 0
+LD 0 14
+ST 3 0
+CALL $set_piece_color 0
+CALL $draw_current 0
+RET 0 0
+$check_collision:
+STI 7 0
+STI 8 0
+$collision_loop:
+LD 0 8
+CMPEI 0 4
+JCMP $collision_clear 0
+LD 12 8
+CALL $get_block 0
+LD 0 0
+ADD 13 0
+LD 0 1
+ADD 14 0
+CMPLi 13 0
+JCMP $collision_hit 0
+CMPGI 13 9
+JCMP $collision_hit 0
+CMPLi 14 0
+JCMP $collision_hit 0
+CMPGI 14 15
+JCMP $collision_hit 0
+COP 14 3
+MULI 3 10
+ADD 3 13
+CALL $grid_read 0
+CMPEI 4 0
+JCMP $collision_empty 0
+JMP $collision_hit 0
+$collision_empty:
+LD 0 8
+ADDI 0 1
+ST 8 0
+JMP $collision_loop 0
+$collision_hit:
+STI 7 1
+RET 0 0
+$collision_clear:
+STI 7 0
+RET 0 0
+$lock_piece:
+STI 8 0
+$lock_loop:
+LD 0 8
+CMPEI 0 4
+JCMP $lock_done 0
+LD 12 8
+CALL $get_block 0
+LD 0 0
+ADD 13 0
+LD 0 1
+ADD 14 0
+COP 14 3
+MULI 3 10
+ADD 3 13
+LD 0 2
+ADDI 0 1
+COP 0 4
+CALL $grid_write 0
+LD 0 8
+ADDI 0 1
+ST 8 0
+JMP $lock_loop 0
+$lock_done:
+RET 0 0
+$lock_and_spawn:
+CALL $lock_piece 0
+CALL $clear_lines 0
+CALL $spawn_piece 0
+RET 0 0
+$clear_lines:
+STI 20 0
+STI 17 15
+$clear_row_loop:
+LD 0 17
+CMPLi 0 0
+JCMP $clear_lines_done 0
+STI 16 1
+STI 18 0
+$clear_col_loop:
+LD 0 18
+CMPGI 0 9
+JCMP $clear_row_scan_done 0
+LD 0 17
+MULI 0 10
+LD 1 18
+ADD 0 1
+COP 0 3
+CALL $grid_read 0
+CMPEI 4 0
+JCMP $clear_not_full 0
+JMP $clear_col_next 0
+$clear_not_full:
+STI 16 0
+$clear_col_next:
+LD 0 18
+ADDI 0 1
+ST 18 0
+JMP $clear_col_loop 0
+$clear_row_scan_done:
+LD 0 16
+CMPEI 0 1
+JCMP $clear_this_row 0
+LD 0 17
+SUBI 0 1
+ST 17 0
+JMP $clear_row_loop 0
+$clear_this_row:
+LD 0 6
+ADDI 0 1
+ST 6 0
+LD 0 22
+ADDI 0 100
+ST 22 0
+PRINT 0 0
+CALL $draw_line_marker 0
+STI 20 1
+LD 0 17
+ST 19 0
+$shift_row_loop:
+LD 0 19
+CMPEI 0 0
+JCMP $clear_top_row 0
+STI 18 0
+$shift_col_loop:
+LD 0 18
+CMPGI 0 9
+JCMP $shift_col_done 0
+LD 3 19
+SUBI 3 1
+MULI 3 10
+LD 0 18
+ADD 3 0
+CALL $grid_read 0
+LD 3 19
+MULI 3 10
+LD 0 18
+ADD 3 0
+CALL $grid_write 0
+LD 0 18
+ADDI 0 1
+ST 18 0
+JMP $shift_col_loop 0
+$shift_col_done:
+LD 0 19
+SUBI 0 1
+ST 19 0
+JMP $shift_row_loop 0
+$clear_top_row:
+STI 18 0
+$clear_top_col_loop:
+LD 0 18
+CMPGI 0 9
+JCMP $clear_top_done 0
+COP 0 3
+LDI 4 0
+CALL $grid_write 0
+LD 0 18
+ADDI 0 1
+ST 18 0
+JMP $clear_top_col_loop 0
+$clear_top_done:
+JMP $clear_row_loop 0
+$clear_lines_done:
+LD 0 20
+CMPEI 0 1
+JCMP $clear_lines_redraw 0
+RET 0 0
+$clear_lines_redraw:
+CALL $redraw_board 0
+RET 0 0
+$get_block:
+LD 0 2
+CMPEI 0 0
+JCMP $get_type_i 0
+CMPEI 0 1
+JCMP $get_type_o 0
+CMPEI 0 2
+JCMP $get_type_t 0
+CMPEI 0 3
+JCMP $get_type_s 0
+CMPEI 0 4
+JCMP $get_type_z 0
+CMPEI 0 5
+JCMP $get_type_j 0
+JMP $get_type_l 0
+$get_type_i:
+LD 1 3
+CMPEI 1 1
+JCMP $shape_i_v 0
+CMPEI 1 3
+JCMP $shape_i_v 0
+JMP $shape_i_h 0
+$get_type_o:
+JMP $shape_o 0
+$get_type_t:
+LD 1 3
+CMPEI 1 0
+JCMP $shape_t0 0
+CMPEI 1 1
+JCMP $shape_t1 0
+CMPEI 1 2
+JCMP $shape_t2 0
+JMP $shape_t3 0
+$get_type_s:
+LD 1 3
+CMPEI 1 1
+JCMP $shape_s_v 0
+CMPEI 1 3
+JCMP $shape_s_v 0
+JMP $shape_s_h 0
+$get_type_z:
+LD 1 3
+CMPEI 1 1
+JCMP $shape_z_v 0
+CMPEI 1 3
+JCMP $shape_z_v 0
+JMP $shape_z_h 0
+$get_type_j:
+LD 1 3
+CMPEI 1 0
+JCMP $shape_j0 0
+CMPEI 1 1
+JCMP $shape_j1 0
+CMPEI 1 2
+JCMP $shape_j2 0
+JMP $shape_j3 0
+$get_type_l:
+LD 1 3
+CMPEI 1 0
+JCMP $shape_l0 0
+CMPEI 1 1
+JCMP $shape_l1 0
+CMPEI 1 2
+JCMP $shape_l2 0
+JMP $shape_l3 0
+$shape_i_h:
+LD 2 8
+CMPEI 2 0
+JCMP $coord_i_h_0 0
+CMPEI 2 1
+JCMP $coord_i_h_1 0
+CMPEI 2 2
+JCMP $coord_i_h_2 0
+JMP $coord_i_h_3 0
+$coord_i_h_0:
+LDI 13 0
+LDI 14 1
+RET 0 0
+$coord_i_h_1:
+LDI 13 1
+LDI 14 1
+RET 0 0
+$coord_i_h_2:
+LDI 13 2
+LDI 14 1
+RET 0 0
+$coord_i_h_3:
+LDI 13 3
+LDI 14 1
+RET 0 0
+$shape_i_v:
+LD 2 8
+CMPEI 2 0
+JCMP $coord_i_v_0 0
+CMPEI 2 1
+JCMP $coord_i_v_1 0
+CMPEI 2 2
+JCMP $coord_i_v_2 0
+JMP $coord_i_v_3 0
+$coord_i_v_0:
+LDI 13 2
+LDI 14 0
+RET 0 0
+$coord_i_v_1:
+LDI 13 2
+LDI 14 1
+RET 0 0
+$coord_i_v_2:
+LDI 13 2
+LDI 14 2
+RET 0 0
+$coord_i_v_3:
+LDI 13 2
+LDI 14 3
+RET 0 0
+$shape_o:
+LD 2 8
+CMPEI 2 0
+JCMP $coord_o_0 0
+CMPEI 2 1
+JCMP $coord_o_1 0
+CMPEI 2 2
+JCMP $coord_o_2 0
+JMP $coord_o_3 0
+$coord_o_0:
+LDI 13 1
+LDI 14 0
+RET 0 0
+$coord_o_1:
+LDI 13 2
+LDI 14 0
+RET 0 0
+$coord_o_2:
+LDI 13 1
+LDI 14 1
+RET 0 0
+$coord_o_3:
+LDI 13 2
+LDI 14 1
+RET 0 0
+$shape_t0:
+LD 2 8
+CMPEI 2 0
+JCMP $coord_t0_0 0
+CMPEI 2 1
+JCMP $coord_t0_1 0
+CMPEI 2 2
+JCMP $coord_t0_2 0
+JMP $coord_t0_3 0
+$coord_t0_0:
+LDI 13 1
+LDI 14 0
+RET 0 0
+$coord_t0_1:
+LDI 13 0
+LDI 14 1
+RET 0 0
+$coord_t0_2:
+LDI 13 1
+LDI 14 1
+RET 0 0
+$coord_t0_3:
+LDI 13 2
+LDI 14 1
+RET 0 0
+$shape_t1:
+LD 2 8
+CMPEI 2 0
+JCMP $coord_t1_0 0
+CMPEI 2 1
+JCMP $coord_t1_1 0
+CMPEI 2 2
+JCMP $coord_t1_2 0
+JMP $coord_t1_3 0
+$coord_t1_0:
+LDI 13 1
+LDI 14 0
+RET 0 0
+$coord_t1_1:
+LDI 13 1
+LDI 14 1
+RET 0 0
+$coord_t1_2:
+LDI 13 2
+LDI 14 1
+RET 0 0
+$coord_t1_3:
+LDI 13 1
+LDI 14 2
+RET 0 0
+$shape_t2:
+LD 2 8
+CMPEI 2 0
+JCMP $coord_t2_0 0
+CMPEI 2 1
+JCMP $coord_t2_1 0
+CMPEI 2 2
+JCMP $coord_t2_2 0
+JMP $coord_t2_3 0
+$coord_t2_0:
+LDI 13 0
+LDI 14 1
+RET 0 0
+$coord_t2_1:
+LDI 13 1
+LDI 14 1
+RET 0 0
+$coord_t2_2:
+LDI 13 2
+LDI 14 1
+RET 0 0
+$coord_t2_3:
+LDI 13 1
+LDI 14 2
+RET 0 0
+$shape_t3:
+LD 2 8
+CMPEI 2 0
+JCMP $coord_t3_0 0
+CMPEI 2 1
+JCMP $coord_t3_1 0
+CMPEI 2 2
+JCMP $coord_t3_2 0
+JMP $coord_t3_3 0
+$coord_t3_0:
+LDI 13 1
+LDI 14 0
+RET 0 0
+$coord_t3_1:
+LDI 13 0
+LDI 14 1
+RET 0 0
+$coord_t3_2:
+LDI 13 1
+LDI 14 1
+RET 0 0
+$coord_t3_3:
+LDI 13 1
+LDI 14 2
+RET 0 0
+$shape_s_h:
+LD 2 8
+CMPEI 2 0
+JCMP $coord_s_h_0 0
+CMPEI 2 1
+JCMP $coord_s_h_1 0
+CMPEI 2 2
+JCMP $coord_s_h_2 0
+JMP $coord_s_h_3 0
+$coord_s_h_0:
+LDI 13 1
+LDI 14 0
+RET 0 0
+$coord_s_h_1:
+LDI 13 2
+LDI 14 0
+RET 0 0
+$coord_s_h_2:
+LDI 13 0
+LDI 14 1
+RET 0 0
+$coord_s_h_3:
+LDI 13 1
+LDI 14 1
+RET 0 0
+$shape_s_v:
+LD 2 8
+CMPEI 2 0
+JCMP $coord_s_v_0 0
+CMPEI 2 1
+JCMP $coord_s_v_1 0
+CMPEI 2 2
+JCMP $coord_s_v_2 0
+JMP $coord_s_v_3 0
+$coord_s_v_0:
+LDI 13 1
+LDI 14 0
+RET 0 0
+$coord_s_v_1:
+LDI 13 1
+LDI 14 1
+RET 0 0
+$coord_s_v_2:
+LDI 13 2
+LDI 14 1
+RET 0 0
+$coord_s_v_3:
+LDI 13 2
+LDI 14 2
+RET 0 0
+$shape_z_h:
+LD 2 8
+CMPEI 2 0
+JCMP $coord_z_h_0 0
+CMPEI 2 1
+JCMP $coord_z_h_1 0
+CMPEI 2 2
+JCMP $coord_z_h_2 0
+JMP $coord_z_h_3 0
+$coord_z_h_0:
+LDI 13 0
+LDI 14 0
+RET 0 0
+$coord_z_h_1:
+LDI 13 1
+LDI 14 0
+RET 0 0
+$coord_z_h_2:
+LDI 13 1
+LDI 14 1
+RET 0 0
+$coord_z_h_3:
+LDI 13 2
+LDI 14 1
+RET 0 0
+$shape_z_v:
+LD 2 8
+CMPEI 2 0
+JCMP $coord_z_v_0 0
+CMPEI 2 1
+JCMP $coord_z_v_1 0
+CMPEI 2 2
+JCMP $coord_z_v_2 0
+JMP $coord_z_v_3 0
+$coord_z_v_0:
+LDI 13 2
+LDI 14 0
+RET 0 0
+$coord_z_v_1:
+LDI 13 1
+LDI 14 1
+RET 0 0
+$coord_z_v_2:
+LDI 13 2
+LDI 14 1
+RET 0 0
+$coord_z_v_3:
+LDI 13 1
+LDI 14 2
+RET 0 0
+$shape_j0:
+LD 2 8
+CMPEI 2 0
+JCMP $coord_j0_0 0
+CMPEI 2 1
+JCMP $coord_j0_1 0
+CMPEI 2 2
+JCMP $coord_j0_2 0
+JMP $coord_j0_3 0
+$coord_j0_0:
+LDI 13 0
+LDI 14 0
+RET 0 0
+$coord_j0_1:
+LDI 13 0
+LDI 14 1
+RET 0 0
+$coord_j0_2:
+LDI 13 1
+LDI 14 1
+RET 0 0
+$coord_j0_3:
+LDI 13 2
+LDI 14 1
+RET 0 0
+$shape_j1:
+LD 2 8
+CMPEI 2 0
+JCMP $coord_j1_0 0
+CMPEI 2 1
+JCMP $coord_j1_1 0
+CMPEI 2 2
+JCMP $coord_j1_2 0
+JMP $coord_j1_3 0
+$coord_j1_0:
+LDI 13 1
+LDI 14 0
+RET 0 0
+$coord_j1_1:
+LDI 13 2
+LDI 14 0
+RET 0 0
+$coord_j1_2:
+LDI 13 1
+LDI 14 1
+RET 0 0
+$coord_j1_3:
+LDI 13 1
+LDI 14 2
+RET 0 0
+$shape_j2:
+LD 2 8
+CMPEI 2 0
+JCMP $coord_j2_0 0
+CMPEI 2 1
+JCMP $coord_j2_1 0
+CMPEI 2 2
+JCMP $coord_j2_2 0
+JMP $coord_j2_3 0
+$coord_j2_0:
+LDI 13 0
+LDI 14 1
+RET 0 0
+$coord_j2_1:
+LDI 13 1
+LDI 14 1
+RET 0 0
+$coord_j2_2:
+LDI 13 2
+LDI 14 1
+RET 0 0
+$coord_j2_3:
+LDI 13 2
+LDI 14 2
+RET 0 0
+$shape_j3:
+LD 2 8
+CMPEI 2 0
+JCMP $coord_j3_0 0
+CMPEI 2 1
+JCMP $coord_j3_1 0
+CMPEI 2 2
+JCMP $coord_j3_2 0
+JMP $coord_j3_3 0
+$coord_j3_0:
+LDI 13 1
+LDI 14 0
+RET 0 0
+$coord_j3_1:
+LDI 13 1
+LDI 14 1
+RET 0 0
+$coord_j3_2:
+LDI 13 0
+LDI 14 2
+RET 0 0
+$coord_j3_3:
+LDI 13 1
+LDI 14 2
+RET 0 0
+$shape_l0:
+LD 2 8
+CMPEI 2 0
+JCMP $coord_l0_0 0
+CMPEI 2 1
+JCMP $coord_l0_1 0
+CMPEI 2 2
+JCMP $coord_l0_2 0
+JMP $coord_l0_3 0
+$coord_l0_0:
+LDI 13 2
+LDI 14 0
+RET 0 0
+$coord_l0_1:
+LDI 13 0
+LDI 14 1
+RET 0 0
+$coord_l0_2:
+LDI 13 1
+LDI 14 1
+RET 0 0
+$coord_l0_3:
+LDI 13 2
+LDI 14 1
+RET 0 0
+$shape_l1:
+LD 2 8
+CMPEI 2 0
+JCMP $coord_l1_0 0
+CMPEI 2 1
+JCMP $coord_l1_1 0
+CMPEI 2 2
+JCMP $coord_l1_2 0
+JMP $coord_l1_3 0
+$coord_l1_0:
+LDI 13 1
+LDI 14 0
+RET 0 0
+$coord_l1_1:
+LDI 13 1
+LDI 14 1
+RET 0 0
+$coord_l1_2:
+LDI 13 1
+LDI 14 2
+RET 0 0
+$coord_l1_3:
+LDI 13 2
+LDI 14 2
+RET 0 0
+$shape_l2:
+LD 2 8
+CMPEI 2 0
+JCMP $coord_l2_0 0
+CMPEI 2 1
+JCMP $coord_l2_1 0
+CMPEI 2 2
+JCMP $coord_l2_2 0
+JMP $coord_l2_3 0
+$coord_l2_0:
+LDI 13 0
+LDI 14 1
+RET 0 0
+$coord_l2_1:
+LDI 13 1
+LDI 14 1
+RET 0 0
+$coord_l2_2:
+LDI 13 2
+LDI 14 1
+RET 0 0
+$coord_l2_3:
+LDI 13 0
+LDI 14 2
+RET 0 0
+$shape_l3:
+LD 2 8
+CMPEI 2 0
+JCMP $coord_l3_0 0
+CMPEI 2 1
+JCMP $coord_l3_1 0
+CMPEI 2 2
+JCMP $coord_l3_2 0
+JMP $coord_l3_3 0
+$coord_l3_0:
+LDI 13 0
+LDI 14 0
+RET 0 0
+$coord_l3_1:
+LDI 13 1
+LDI 14 0
+RET 0 0
+$coord_l3_2:
+LDI 13 1
+LDI 14 1
+RET 0 0
+$coord_l3_3:
+LDI 13 1
+LDI 14 2
+RET 0 0
+$grid_read:
+$grid_read_node_0_160:
+CMPLI 3 80
+JCMP $grid_read_node_0_80 0
+JMP $grid_read_node_80_160 0
+$grid_read_node_0_80:
+CMPLI 3 40
+JCMP $grid_read_node_0_40 0
+JMP $grid_read_node_40_80 0
+$grid_read_node_0_40:
+CMPLI 3 20
+JCMP $grid_read_node_0_20 0
+JMP $grid_read_node_20_40 0
+$grid_read_node_0_20:
+CMPLI 3 10
+JCMP $grid_read_node_0_10 0
+JMP $grid_read_node_10_20 0
+$grid_read_node_0_10:
+CMPLI 3 5
+JCMP $grid_read_node_0_5 0
+JMP $grid_read_node_5_10 0
+$grid_read_node_0_5:
+CMPLI 3 2
+JCMP $grid_read_node_0_2 0
+JMP $grid_read_node_2_5 0
+$grid_read_node_0_2:
+CMPLI 3 1
+JCMP $grid_read_cell_0 0
+JMP $grid_read_cell_1 0
+$grid_read_cell_0:
+LD 4 64
+RET 0 0
+$grid_read_cell_1:
+LD 4 65
+RET 0 0
+$grid_read_node_2_5:
+CMPLI 3 3
+JCMP $grid_read_cell_2 0
+JMP $grid_read_node_3_5 0
+$grid_read_cell_2:
+LD 4 66
+RET 0 0
+$grid_read_node_3_5:
+CMPLI 3 4
+JCMP $grid_read_cell_3 0
+JMP $grid_read_cell_4 0
+$grid_read_cell_3:
+LD 4 67
+RET 0 0
+$grid_read_cell_4:
+LD 4 68
+RET 0 0
+$grid_read_node_5_10:
+CMPLI 3 7
+JCMP $grid_read_node_5_7 0
+JMP $grid_read_node_7_10 0
+$grid_read_node_5_7:
+CMPLI 3 6
+JCMP $grid_read_cell_5 0
+JMP $grid_read_cell_6 0
+$grid_read_cell_5:
+LD 4 69
+RET 0 0
+$grid_read_cell_6:
+LD 4 70
+RET 0 0
+$grid_read_node_7_10:
+CMPLI 3 8
+JCMP $grid_read_cell_7 0
+JMP $grid_read_node_8_10 0
+$grid_read_cell_7:
+LD 4 71
+RET 0 0
+$grid_read_node_8_10:
+CMPLI 3 9
+JCMP $grid_read_cell_8 0
+JMP $grid_read_cell_9 0
+$grid_read_cell_8:
+LD 4 72
+RET 0 0
+$grid_read_cell_9:
+LD 4 73
+RET 0 0
+$grid_read_node_10_20:
+CMPLI 3 15
+JCMP $grid_read_node_10_15 0
+JMP $grid_read_node_15_20 0
+$grid_read_node_10_15:
+CMPLI 3 12
+JCMP $grid_read_node_10_12 0
+JMP $grid_read_node_12_15 0
+$grid_read_node_10_12:
+CMPLI 3 11
+JCMP $grid_read_cell_10 0
+JMP $grid_read_cell_11 0
+$grid_read_cell_10:
+LD 4 74
+RET 0 0
+$grid_read_cell_11:
+LD 4 75
+RET 0 0
+$grid_read_node_12_15:
+CMPLI 3 13
+JCMP $grid_read_cell_12 0
+JMP $grid_read_node_13_15 0
+$grid_read_cell_12:
+LD 4 76
+RET 0 0
+$grid_read_node_13_15:
+CMPLI 3 14
+JCMP $grid_read_cell_13 0
+JMP $grid_read_cell_14 0
+$grid_read_cell_13:
+LD 4 77
+RET 0 0
+$grid_read_cell_14:
+LD 4 78
+RET 0 0
+$grid_read_node_15_20:
+CMPLI 3 17
+JCMP $grid_read_node_15_17 0
+JMP $grid_read_node_17_20 0
+$grid_read_node_15_17:
+CMPLI 3 16
+JCMP $grid_read_cell_15 0
+JMP $grid_read_cell_16 0
+$grid_read_cell_15:
+LD 4 79
+RET 0 0
+$grid_read_cell_16:
+LD 4 80
+RET 0 0
+$grid_read_node_17_20:
+CMPLI 3 18
+JCMP $grid_read_cell_17 0
+JMP $grid_read_node_18_20 0
+$grid_read_cell_17:
+LD 4 81
+RET 0 0
+$grid_read_node_18_20:
+CMPLI 3 19
+JCMP $grid_read_cell_18 0
+JMP $grid_read_cell_19 0
+$grid_read_cell_18:
+LD 4 82
+RET 0 0
+$grid_read_cell_19:
+LD 4 83
+RET 0 0
+$grid_read_node_20_40:
+CMPLI 3 30
+JCMP $grid_read_node_20_30 0
+JMP $grid_read_node_30_40 0
+$grid_read_node_20_30:
+CMPLI 3 25
+JCMP $grid_read_node_20_25 0
+JMP $grid_read_node_25_30 0
+$grid_read_node_20_25:
+CMPLI 3 22
+JCMP $grid_read_node_20_22 0
+JMP $grid_read_node_22_25 0
+$grid_read_node_20_22:
+CMPLI 3 21
+JCMP $grid_read_cell_20 0
+JMP $grid_read_cell_21 0
+$grid_read_cell_20:
+LD 4 84
+RET 0 0
+$grid_read_cell_21:
+LD 4 85
+RET 0 0
+$grid_read_node_22_25:
+CMPLI 3 23
+JCMP $grid_read_cell_22 0
+JMP $grid_read_node_23_25 0
+$grid_read_cell_22:
+LD 4 86
+RET 0 0
+$grid_read_node_23_25:
+CMPLI 3 24
+JCMP $grid_read_cell_23 0
+JMP $grid_read_cell_24 0
+$grid_read_cell_23:
+LD 4 87
+RET 0 0
+$grid_read_cell_24:
+LD 4 88
+RET 0 0
+$grid_read_node_25_30:
+CMPLI 3 27
+JCMP $grid_read_node_25_27 0
+JMP $grid_read_node_27_30 0
+$grid_read_node_25_27:
+CMPLI 3 26
+JCMP $grid_read_cell_25 0
+JMP $grid_read_cell_26 0
+$grid_read_cell_25:
+LD 4 89
+RET 0 0
+$grid_read_cell_26:
+LD 4 90
+RET 0 0
+$grid_read_node_27_30:
+CMPLI 3 28
+JCMP $grid_read_cell_27 0
+JMP $grid_read_node_28_30 0
+$grid_read_cell_27:
+LD 4 91
+RET 0 0
+$grid_read_node_28_30:
+CMPLI 3 29
+JCMP $grid_read_cell_28 0
+JMP $grid_read_cell_29 0
+$grid_read_cell_28:
+LD 4 92
+RET 0 0
+$grid_read_cell_29:
+LD 4 93
+RET 0 0
+$grid_read_node_30_40:
+CMPLI 3 35
+JCMP $grid_read_node_30_35 0
+JMP $grid_read_node_35_40 0
+$grid_read_node_30_35:
+CMPLI 3 32
+JCMP $grid_read_node_30_32 0
+JMP $grid_read_node_32_35 0
+$grid_read_node_30_32:
+CMPLI 3 31
+JCMP $grid_read_cell_30 0
+JMP $grid_read_cell_31 0
+$grid_read_cell_30:
+LD 4 94
+RET 0 0
+$grid_read_cell_31:
+LD 4 95
+RET 0 0
+$grid_read_node_32_35:
+CMPLI 3 33
+JCMP $grid_read_cell_32 0
+JMP $grid_read_node_33_35 0
+$grid_read_cell_32:
+LD 4 96
+RET 0 0
+$grid_read_node_33_35:
+CMPLI 3 34
+JCMP $grid_read_cell_33 0
+JMP $grid_read_cell_34 0
+$grid_read_cell_33:
+LD 4 97
+RET 0 0
+$grid_read_cell_34:
+LD 4 98
+RET 0 0
+$grid_read_node_35_40:
+CMPLI 3 37
+JCMP $grid_read_node_35_37 0
+JMP $grid_read_node_37_40 0
+$grid_read_node_35_37:
+CMPLI 3 36
+JCMP $grid_read_cell_35 0
+JMP $grid_read_cell_36 0
+$grid_read_cell_35:
+LD 4 99
+RET 0 0
+$grid_read_cell_36:
+LD 4 100
+RET 0 0
+$grid_read_node_37_40:
+CMPLI 3 38
+JCMP $grid_read_cell_37 0
+JMP $grid_read_node_38_40 0
+$grid_read_cell_37:
+LD 4 101
+RET 0 0
+$grid_read_node_38_40:
+CMPLI 3 39
+JCMP $grid_read_cell_38 0
+JMP $grid_read_cell_39 0
+$grid_read_cell_38:
+LD 4 102
+RET 0 0
+$grid_read_cell_39:
+LD 4 103
+RET 0 0
+$grid_read_node_40_80:
+CMPLI 3 60
+JCMP $grid_read_node_40_60 0
+JMP $grid_read_node_60_80 0
+$grid_read_node_40_60:
+CMPLI 3 50
+JCMP $grid_read_node_40_50 0
+JMP $grid_read_node_50_60 0
+$grid_read_node_40_50:
+CMPLI 3 45
+JCMP $grid_read_node_40_45 0
+JMP $grid_read_node_45_50 0
+$grid_read_node_40_45:
+CMPLI 3 42
+JCMP $grid_read_node_40_42 0
+JMP $grid_read_node_42_45 0
+$grid_read_node_40_42:
+CMPLI 3 41
+JCMP $grid_read_cell_40 0
+JMP $grid_read_cell_41 0
+$grid_read_cell_40:
+LD 4 104
+RET 0 0
+$grid_read_cell_41:
+LD 4 105
+RET 0 0
+$grid_read_node_42_45:
+CMPLI 3 43
+JCMP $grid_read_cell_42 0
+JMP $grid_read_node_43_45 0
+$grid_read_cell_42:
+LD 4 106
+RET 0 0
+$grid_read_node_43_45:
+CMPLI 3 44
+JCMP $grid_read_cell_43 0
+JMP $grid_read_cell_44 0
+$grid_read_cell_43:
+LD 4 107
+RET 0 0
+$grid_read_cell_44:
+LD 4 108
+RET 0 0
+$grid_read_node_45_50:
+CMPLI 3 47
+JCMP $grid_read_node_45_47 0
+JMP $grid_read_node_47_50 0
+$grid_read_node_45_47:
+CMPLI 3 46
+JCMP $grid_read_cell_45 0
+JMP $grid_read_cell_46 0
+$grid_read_cell_45:
+LD 4 109
+RET 0 0
+$grid_read_cell_46:
+LD 4 110
+RET 0 0
+$grid_read_node_47_50:
+CMPLI 3 48
+JCMP $grid_read_cell_47 0
+JMP $grid_read_node_48_50 0
+$grid_read_cell_47:
+LD 4 111
+RET 0 0
+$grid_read_node_48_50:
+CMPLI 3 49
+JCMP $grid_read_cell_48 0
+JMP $grid_read_cell_49 0
+$grid_read_cell_48:
+LD 4 112
+RET 0 0
+$grid_read_cell_49:
+LD 4 113
+RET 0 0
+$grid_read_node_50_60:
+CMPLI 3 55
+JCMP $grid_read_node_50_55 0
+JMP $grid_read_node_55_60 0
+$grid_read_node_50_55:
+CMPLI 3 52
+JCMP $grid_read_node_50_52 0
+JMP $grid_read_node_52_55 0
+$grid_read_node_50_52:
+CMPLI 3 51
+JCMP $grid_read_cell_50 0
+JMP $grid_read_cell_51 0
+$grid_read_cell_50:
+LD 4 114
+RET 0 0
+$grid_read_cell_51:
+LD 4 115
+RET 0 0
+$grid_read_node_52_55:
+CMPLI 3 53
+JCMP $grid_read_cell_52 0
+JMP $grid_read_node_53_55 0
+$grid_read_cell_52:
+LD 4 116
+RET 0 0
+$grid_read_node_53_55:
+CMPLI 3 54
+JCMP $grid_read_cell_53 0
+JMP $grid_read_cell_54 0
+$grid_read_cell_53:
+LD 4 117
+RET 0 0
+$grid_read_cell_54:
+LD 4 118
+RET 0 0
+$grid_read_node_55_60:
+CMPLI 3 57
+JCMP $grid_read_node_55_57 0
+JMP $grid_read_node_57_60 0
+$grid_read_node_55_57:
+CMPLI 3 56
+JCMP $grid_read_cell_55 0
+JMP $grid_read_cell_56 0
+$grid_read_cell_55:
+LD 4 119
+RET 0 0
+$grid_read_cell_56:
+LD 4 120
+RET 0 0
+$grid_read_node_57_60:
+CMPLI 3 58
+JCMP $grid_read_cell_57 0
+JMP $grid_read_node_58_60 0
+$grid_read_cell_57:
+LD 4 121
+RET 0 0
+$grid_read_node_58_60:
+CMPLI 3 59
+JCMP $grid_read_cell_58 0
+JMP $grid_read_cell_59 0
+$grid_read_cell_58:
+LD 4 122
+RET 0 0
+$grid_read_cell_59:
+LD 4 123
+RET 0 0
+$grid_read_node_60_80:
+CMPLI 3 70
+JCMP $grid_read_node_60_70 0
+JMP $grid_read_node_70_80 0
+$grid_read_node_60_70:
+CMPLI 3 65
+JCMP $grid_read_node_60_65 0
+JMP $grid_read_node_65_70 0
+$grid_read_node_60_65:
+CMPLI 3 62
+JCMP $grid_read_node_60_62 0
+JMP $grid_read_node_62_65 0
+$grid_read_node_60_62:
+CMPLI 3 61
+JCMP $grid_read_cell_60 0
+JMP $grid_read_cell_61 0
+$grid_read_cell_60:
+LD 4 124
+RET 0 0
+$grid_read_cell_61:
+LD 4 125
+RET 0 0
+$grid_read_node_62_65:
+CMPLI 3 63
+JCMP $grid_read_cell_62 0
+JMP $grid_read_node_63_65 0
+$grid_read_cell_62:
+LD 4 126
+RET 0 0
+$grid_read_node_63_65:
+CMPLI 3 64
+JCMP $grid_read_cell_63 0
+JMP $grid_read_cell_64 0
+$grid_read_cell_63:
+LD 4 127
+RET 0 0
+$grid_read_cell_64:
+LD 4 128
+RET 0 0
+$grid_read_node_65_70:
+CMPLI 3 67
+JCMP $grid_read_node_65_67 0
+JMP $grid_read_node_67_70 0
+$grid_read_node_65_67:
+CMPLI 3 66
+JCMP $grid_read_cell_65 0
+JMP $grid_read_cell_66 0
+$grid_read_cell_65:
+LD 4 129
+RET 0 0
+$grid_read_cell_66:
+LD 4 130
+RET 0 0
+$grid_read_node_67_70:
+CMPLI 3 68
+JCMP $grid_read_cell_67 0
+JMP $grid_read_node_68_70 0
+$grid_read_cell_67:
+LD 4 131
+RET 0 0
+$grid_read_node_68_70:
+CMPLI 3 69
+JCMP $grid_read_cell_68 0
+JMP $grid_read_cell_69 0
+$grid_read_cell_68:
+LD 4 132
+RET 0 0
+$grid_read_cell_69:
+LD 4 133
+RET 0 0
+$grid_read_node_70_80:
+CMPLI 3 75
+JCMP $grid_read_node_70_75 0
+JMP $grid_read_node_75_80 0
+$grid_read_node_70_75:
+CMPLI 3 72
+JCMP $grid_read_node_70_72 0
+JMP $grid_read_node_72_75 0
+$grid_read_node_70_72:
+CMPLI 3 71
+JCMP $grid_read_cell_70 0
+JMP $grid_read_cell_71 0
+$grid_read_cell_70:
+LD 4 134
+RET 0 0
+$grid_read_cell_71:
+LD 4 135
+RET 0 0
+$grid_read_node_72_75:
+CMPLI 3 73
+JCMP $grid_read_cell_72 0
+JMP $grid_read_node_73_75 0
+$grid_read_cell_72:
+LD 4 136
+RET 0 0
+$grid_read_node_73_75:
+CMPLI 3 74
+JCMP $grid_read_cell_73 0
+JMP $grid_read_cell_74 0
+$grid_read_cell_73:
+LD 4 137
+RET 0 0
+$grid_read_cell_74:
+LD 4 138
+RET 0 0
+$grid_read_node_75_80:
+CMPLI 3 77
+JCMP $grid_read_node_75_77 0
+JMP $grid_read_node_77_80 0
+$grid_read_node_75_77:
+CMPLI 3 76
+JCMP $grid_read_cell_75 0
+JMP $grid_read_cell_76 0
+$grid_read_cell_75:
+LD 4 139
+RET 0 0
+$grid_read_cell_76:
+LD 4 140
+RET 0 0
+$grid_read_node_77_80:
+CMPLI 3 78
+JCMP $grid_read_cell_77 0
+JMP $grid_read_node_78_80 0
+$grid_read_cell_77:
+LD 4 141
+RET 0 0
+$grid_read_node_78_80:
+CMPLI 3 79
+JCMP $grid_read_cell_78 0
+JMP $grid_read_cell_79 0
+$grid_read_cell_78:
+LD 4 142
+RET 0 0
+$grid_read_cell_79:
+LD 4 143
+RET 0 0
+$grid_read_node_80_160:
+CMPLI 3 120
+JCMP $grid_read_node_80_120 0
+JMP $grid_read_node_120_160 0
+$grid_read_node_80_120:
+CMPLI 3 100
+JCMP $grid_read_node_80_100 0
+JMP $grid_read_node_100_120 0
+$grid_read_node_80_100:
+CMPLI 3 90
+JCMP $grid_read_node_80_90 0
+JMP $grid_read_node_90_100 0
+$grid_read_node_80_90:
+CMPLI 3 85
+JCMP $grid_read_node_80_85 0
+JMP $grid_read_node_85_90 0
+$grid_read_node_80_85:
+CMPLI 3 82
+JCMP $grid_read_node_80_82 0
+JMP $grid_read_node_82_85 0
+$grid_read_node_80_82:
+CMPLI 3 81
+JCMP $grid_read_cell_80 0
+JMP $grid_read_cell_81 0
+$grid_read_cell_80:
+LD 4 144
+RET 0 0
+$grid_read_cell_81:
+LD 4 145
+RET 0 0
+$grid_read_node_82_85:
+CMPLI 3 83
+JCMP $grid_read_cell_82 0
+JMP $grid_read_node_83_85 0
+$grid_read_cell_82:
+LD 4 146
+RET 0 0
+$grid_read_node_83_85:
+CMPLI 3 84
+JCMP $grid_read_cell_83 0
+JMP $grid_read_cell_84 0
+$grid_read_cell_83:
+LD 4 147
+RET 0 0
+$grid_read_cell_84:
+LD 4 148
+RET 0 0
+$grid_read_node_85_90:
+CMPLI 3 87
+JCMP $grid_read_node_85_87 0
+JMP $grid_read_node_87_90 0
+$grid_read_node_85_87:
+CMPLI 3 86
+JCMP $grid_read_cell_85 0
+JMP $grid_read_cell_86 0
+$grid_read_cell_85:
+LD 4 149
+RET 0 0
+$grid_read_cell_86:
+LD 4 150
+RET 0 0
+$grid_read_node_87_90:
+CMPLI 3 88
+JCMP $grid_read_cell_87 0
+JMP $grid_read_node_88_90 0
+$grid_read_cell_87:
+LD 4 151
+RET 0 0
+$grid_read_node_88_90:
+CMPLI 3 89
+JCMP $grid_read_cell_88 0
+JMP $grid_read_cell_89 0
+$grid_read_cell_88:
+LD 4 152
+RET 0 0
+$grid_read_cell_89:
+LD 4 153
+RET 0 0
+$grid_read_node_90_100:
+CMPLI 3 95
+JCMP $grid_read_node_90_95 0
+JMP $grid_read_node_95_100 0
+$grid_read_node_90_95:
+CMPLI 3 92
+JCMP $grid_read_node_90_92 0
+JMP $grid_read_node_92_95 0
+$grid_read_node_90_92:
+CMPLI 3 91
+JCMP $grid_read_cell_90 0
+JMP $grid_read_cell_91 0
+$grid_read_cell_90:
+LD 4 154
+RET 0 0
+$grid_read_cell_91:
+LD 4 155
+RET 0 0
+$grid_read_node_92_95:
+CMPLI 3 93
+JCMP $grid_read_cell_92 0
+JMP $grid_read_node_93_95 0
+$grid_read_cell_92:
+LD 4 156
+RET 0 0
+$grid_read_node_93_95:
+CMPLI 3 94
+JCMP $grid_read_cell_93 0
+JMP $grid_read_cell_94 0
+$grid_read_cell_93:
+LD 4 157
+RET 0 0
+$grid_read_cell_94:
+LD 4 158
+RET 0 0
+$grid_read_node_95_100:
+CMPLI 3 97
+JCMP $grid_read_node_95_97 0
+JMP $grid_read_node_97_100 0
+$grid_read_node_95_97:
+CMPLI 3 96
+JCMP $grid_read_cell_95 0
+JMP $grid_read_cell_96 0
+$grid_read_cell_95:
+LD 4 159
+RET 0 0
+$grid_read_cell_96:
+LD 4 160
+RET 0 0
+$grid_read_node_97_100:
+CMPLI 3 98
+JCMP $grid_read_cell_97 0
+JMP $grid_read_node_98_100 0
+$grid_read_cell_97:
+LD 4 161
+RET 0 0
+$grid_read_node_98_100:
+CMPLI 3 99
+JCMP $grid_read_cell_98 0
+JMP $grid_read_cell_99 0
+$grid_read_cell_98:
+LD 4 162
+RET 0 0
+$grid_read_cell_99:
+LD 4 163
+RET 0 0
+$grid_read_node_100_120:
+CMPLI 3 110
+JCMP $grid_read_node_100_110 0
+JMP $grid_read_node_110_120 0
+$grid_read_node_100_110:
+CMPLI 3 105
+JCMP $grid_read_node_100_105 0
+JMP $grid_read_node_105_110 0
+$grid_read_node_100_105:
+CMPLI 3 102
+JCMP $grid_read_node_100_102 0
+JMP $grid_read_node_102_105 0
+$grid_read_node_100_102:
+CMPLI 3 101
+JCMP $grid_read_cell_100 0
+JMP $grid_read_cell_101 0
+$grid_read_cell_100:
+LD 4 164
+RET 0 0
+$grid_read_cell_101:
+LD 4 165
+RET 0 0
+$grid_read_node_102_105:
+CMPLI 3 103
+JCMP $grid_read_cell_102 0
+JMP $grid_read_node_103_105 0
+$grid_read_cell_102:
+LD 4 166
+RET 0 0
+$grid_read_node_103_105:
+CMPLI 3 104
+JCMP $grid_read_cell_103 0
+JMP $grid_read_cell_104 0
+$grid_read_cell_103:
+LD 4 167
+RET 0 0
+$grid_read_cell_104:
+LD 4 168
+RET 0 0
+$grid_read_node_105_110:
+CMPLI 3 107
+JCMP $grid_read_node_105_107 0
+JMP $grid_read_node_107_110 0
+$grid_read_node_105_107:
+CMPLI 3 106
+JCMP $grid_read_cell_105 0
+JMP $grid_read_cell_106 0
+$grid_read_cell_105:
+LD 4 169
+RET 0 0
+$grid_read_cell_106:
+LD 4 170
+RET 0 0
+$grid_read_node_107_110:
+CMPLI 3 108
+JCMP $grid_read_cell_107 0
+JMP $grid_read_node_108_110 0
+$grid_read_cell_107:
+LD 4 171
+RET 0 0
+$grid_read_node_108_110:
+CMPLI 3 109
+JCMP $grid_read_cell_108 0
+JMP $grid_read_cell_109 0
+$grid_read_cell_108:
+LD 4 172
+RET 0 0
+$grid_read_cell_109:
+LD 4 173
+RET 0 0
+$grid_read_node_110_120:
+CMPLI 3 115
+JCMP $grid_read_node_110_115 0
+JMP $grid_read_node_115_120 0
+$grid_read_node_110_115:
+CMPLI 3 112
+JCMP $grid_read_node_110_112 0
+JMP $grid_read_node_112_115 0
+$grid_read_node_110_112:
+CMPLI 3 111
+JCMP $grid_read_cell_110 0
+JMP $grid_read_cell_111 0
+$grid_read_cell_110:
+LD 4 174
+RET 0 0
+$grid_read_cell_111:
+LD 4 175
+RET 0 0
+$grid_read_node_112_115:
+CMPLI 3 113
+JCMP $grid_read_cell_112 0
+JMP $grid_read_node_113_115 0
+$grid_read_cell_112:
+LD 4 176
+RET 0 0
+$grid_read_node_113_115:
+CMPLI 3 114
+JCMP $grid_read_cell_113 0
+JMP $grid_read_cell_114 0
+$grid_read_cell_113:
+LD 4 177
+RET 0 0
+$grid_read_cell_114:
+LD 4 178
+RET 0 0
+$grid_read_node_115_120:
+CMPLI 3 117
+JCMP $grid_read_node_115_117 0
+JMP $grid_read_node_117_120 0
+$grid_read_node_115_117:
+CMPLI 3 116
+JCMP $grid_read_cell_115 0
+JMP $grid_read_cell_116 0
+$grid_read_cell_115:
+LD 4 179
+RET 0 0
+$grid_read_cell_116:
+LD 4 180
+RET 0 0
+$grid_read_node_117_120:
+CMPLI 3 118
+JCMP $grid_read_cell_117 0
+JMP $grid_read_node_118_120 0
+$grid_read_cell_117:
+LD 4 181
+RET 0 0
+$grid_read_node_118_120:
+CMPLI 3 119
+JCMP $grid_read_cell_118 0
+JMP $grid_read_cell_119 0
+$grid_read_cell_118:
+LD 4 182
+RET 0 0
+$grid_read_cell_119:
+LD 4 183
+RET 0 0
+$grid_read_node_120_160:
+CMPLI 3 140
+JCMP $grid_read_node_120_140 0
+JMP $grid_read_node_140_160 0
+$grid_read_node_120_140:
+CMPLI 3 130
+JCMP $grid_read_node_120_130 0
+JMP $grid_read_node_130_140 0
+$grid_read_node_120_130:
+CMPLI 3 125
+JCMP $grid_read_node_120_125 0
+JMP $grid_read_node_125_130 0
+$grid_read_node_120_125:
+CMPLI 3 122
+JCMP $grid_read_node_120_122 0
+JMP $grid_read_node_122_125 0
+$grid_read_node_120_122:
+CMPLI 3 121
+JCMP $grid_read_cell_120 0
+JMP $grid_read_cell_121 0
+$grid_read_cell_120:
+LD 4 184
+RET 0 0
+$grid_read_cell_121:
+LD 4 185
+RET 0 0
+$grid_read_node_122_125:
+CMPLI 3 123
+JCMP $grid_read_cell_122 0
+JMP $grid_read_node_123_125 0
+$grid_read_cell_122:
+LD 4 186
+RET 0 0
+$grid_read_node_123_125:
+CMPLI 3 124
+JCMP $grid_read_cell_123 0
+JMP $grid_read_cell_124 0
+$grid_read_cell_123:
+LD 4 187
+RET 0 0
+$grid_read_cell_124:
+LD 4 188
+RET 0 0
+$grid_read_node_125_130:
+CMPLI 3 127
+JCMP $grid_read_node_125_127 0
+JMP $grid_read_node_127_130 0
+$grid_read_node_125_127:
+CMPLI 3 126
+JCMP $grid_read_cell_125 0
+JMP $grid_read_cell_126 0
+$grid_read_cell_125:
+LD 4 189
+RET 0 0
+$grid_read_cell_126:
+LD 4 190
+RET 0 0
+$grid_read_node_127_130:
+CMPLI 3 128
+JCMP $grid_read_cell_127 0
+JMP $grid_read_node_128_130 0
+$grid_read_cell_127:
+LD 4 191
+RET 0 0
+$grid_read_node_128_130:
+CMPLI 3 129
+JCMP $grid_read_cell_128 0
+JMP $grid_read_cell_129 0
+$grid_read_cell_128:
+LD 4 192
+RET 0 0
+$grid_read_cell_129:
+LD 4 193
+RET 0 0
+$grid_read_node_130_140:
+CMPLI 3 135
+JCMP $grid_read_node_130_135 0
+JMP $grid_read_node_135_140 0
+$grid_read_node_130_135:
+CMPLI 3 132
+JCMP $grid_read_node_130_132 0
+JMP $grid_read_node_132_135 0
+$grid_read_node_130_132:
+CMPLI 3 131
+JCMP $grid_read_cell_130 0
+JMP $grid_read_cell_131 0
+$grid_read_cell_130:
+LD 4 194
+RET 0 0
+$grid_read_cell_131:
+LD 4 195
+RET 0 0
+$grid_read_node_132_135:
+CMPLI 3 133
+JCMP $grid_read_cell_132 0
+JMP $grid_read_node_133_135 0
+$grid_read_cell_132:
+LD 4 196
+RET 0 0
+$grid_read_node_133_135:
+CMPLI 3 134
+JCMP $grid_read_cell_133 0
+JMP $grid_read_cell_134 0
+$grid_read_cell_133:
+LD 4 197
+RET 0 0
+$grid_read_cell_134:
+LD 4 198
+RET 0 0
+$grid_read_node_135_140:
+CMPLI 3 137
+JCMP $grid_read_node_135_137 0
+JMP $grid_read_node_137_140 0
+$grid_read_node_135_137:
+CMPLI 3 136
+JCMP $grid_read_cell_135 0
+JMP $grid_read_cell_136 0
+$grid_read_cell_135:
+LD 4 199
+RET 0 0
+$grid_read_cell_136:
+LD 4 200
+RET 0 0
+$grid_read_node_137_140:
+CMPLI 3 138
+JCMP $grid_read_cell_137 0
+JMP $grid_read_node_138_140 0
+$grid_read_cell_137:
+LD 4 201
+RET 0 0
+$grid_read_node_138_140:
+CMPLI 3 139
+JCMP $grid_read_cell_138 0
+JMP $grid_read_cell_139 0
+$grid_read_cell_138:
+LD 4 202
+RET 0 0
+$grid_read_cell_139:
+LD 4 203
+RET 0 0
+$grid_read_node_140_160:
+CMPLI 3 150
+JCMP $grid_read_node_140_150 0
+JMP $grid_read_node_150_160 0
+$grid_read_node_140_150:
+CMPLI 3 145
+JCMP $grid_read_node_140_145 0
+JMP $grid_read_node_145_150 0
+$grid_read_node_140_145:
+CMPLI 3 142
+JCMP $grid_read_node_140_142 0
+JMP $grid_read_node_142_145 0
+$grid_read_node_140_142:
+CMPLI 3 141
+JCMP $grid_read_cell_140 0
+JMP $grid_read_cell_141 0
+$grid_read_cell_140:
+LD 4 204
+RET 0 0
+$grid_read_cell_141:
+LD 4 205
+RET 0 0
+$grid_read_node_142_145:
+CMPLI 3 143
+JCMP $grid_read_cell_142 0
+JMP $grid_read_node_143_145 0
+$grid_read_cell_142:
+LD 4 206
+RET 0 0
+$grid_read_node_143_145:
+CMPLI 3 144
+JCMP $grid_read_cell_143 0
+JMP $grid_read_cell_144 0
+$grid_read_cell_143:
+LD 4 207
+RET 0 0
+$grid_read_cell_144:
+LD 4 208
+RET 0 0
+$grid_read_node_145_150:
+CMPLI 3 147
+JCMP $grid_read_node_145_147 0
+JMP $grid_read_node_147_150 0
+$grid_read_node_145_147:
+CMPLI 3 146
+JCMP $grid_read_cell_145 0
+JMP $grid_read_cell_146 0
+$grid_read_cell_145:
+LD 4 209
+RET 0 0
+$grid_read_cell_146:
+LD 4 210
+RET 0 0
+$grid_read_node_147_150:
+CMPLI 3 148
+JCMP $grid_read_cell_147 0
+JMP $grid_read_node_148_150 0
+$grid_read_cell_147:
+LD 4 211
+RET 0 0
+$grid_read_node_148_150:
+CMPLI 3 149
+JCMP $grid_read_cell_148 0
+JMP $grid_read_cell_149 0
+$grid_read_cell_148:
+LD 4 212
+RET 0 0
+$grid_read_cell_149:
+LD 4 213
+RET 0 0
+$grid_read_node_150_160:
+CMPLI 3 155
+JCMP $grid_read_node_150_155 0
+JMP $grid_read_node_155_160 0
+$grid_read_node_150_155:
+CMPLI 3 152
+JCMP $grid_read_node_150_152 0
+JMP $grid_read_node_152_155 0
+$grid_read_node_150_152:
+CMPLI 3 151
+JCMP $grid_read_cell_150 0
+JMP $grid_read_cell_151 0
+$grid_read_cell_150:
+LD 4 214
+RET 0 0
+$grid_read_cell_151:
+LD 4 215
+RET 0 0
+$grid_read_node_152_155:
+CMPLI 3 153
+JCMP $grid_read_cell_152 0
+JMP $grid_read_node_153_155 0
+$grid_read_cell_152:
+LD 4 216
+RET 0 0
+$grid_read_node_153_155:
+CMPLI 3 154
+JCMP $grid_read_cell_153 0
+JMP $grid_read_cell_154 0
+$grid_read_cell_153:
+LD 4 217
+RET 0 0
+$grid_read_cell_154:
+LD 4 218
+RET 0 0
+$grid_read_node_155_160:
+CMPLI 3 157
+JCMP $grid_read_node_155_157 0
+JMP $grid_read_node_157_160 0
+$grid_read_node_155_157:
+CMPLI 3 156
+JCMP $grid_read_cell_155 0
+JMP $grid_read_cell_156 0
+$grid_read_cell_155:
+LD 4 219
+RET 0 0
+$grid_read_cell_156:
+LD 4 220
+RET 0 0
+$grid_read_node_157_160:
+CMPLI 3 158
+JCMP $grid_read_cell_157 0
+JMP $grid_read_node_158_160 0
+$grid_read_cell_157:
+LD 4 221
+RET 0 0
+$grid_read_node_158_160:
+CMPLI 3 159
+JCMP $grid_read_cell_158 0
+JMP $grid_read_cell_159 0
+$grid_read_cell_158:
+LD 4 222
+RET 0 0
+$grid_read_cell_159:
+LD 4 223
+RET 0 0
+$grid_write:
+$grid_write_node_0_160:
+CMPLI 3 80
+JCMP $grid_write_node_0_80 0
+JMP $grid_write_node_80_160 0
+$grid_write_node_0_80:
+CMPLI 3 40
+JCMP $grid_write_node_0_40 0
+JMP $grid_write_node_40_80 0
+$grid_write_node_0_40:
+CMPLI 3 20
+JCMP $grid_write_node_0_20 0
+JMP $grid_write_node_20_40 0
+$grid_write_node_0_20:
+CMPLI 3 10
+JCMP $grid_write_node_0_10 0
+JMP $grid_write_node_10_20 0
+$grid_write_node_0_10:
+CMPLI 3 5
+JCMP $grid_write_node_0_5 0
+JMP $grid_write_node_5_10 0
+$grid_write_node_0_5:
+CMPLI 3 2
+JCMP $grid_write_node_0_2 0
+JMP $grid_write_node_2_5 0
+$grid_write_node_0_2:
+CMPLI 3 1
+JCMP $grid_write_cell_0 0
+JMP $grid_write_cell_1 0
+$grid_write_cell_0:
+ST 64 4
+RET 0 0
+$grid_write_cell_1:
+ST 65 4
+RET 0 0
+$grid_write_node_2_5:
+CMPLI 3 3
+JCMP $grid_write_cell_2 0
+JMP $grid_write_node_3_5 0
+$grid_write_cell_2:
+ST 66 4
+RET 0 0
+$grid_write_node_3_5:
+CMPLI 3 4
+JCMP $grid_write_cell_3 0
+JMP $grid_write_cell_4 0
+$grid_write_cell_3:
+ST 67 4
+RET 0 0
+$grid_write_cell_4:
+ST 68 4
+RET 0 0
+$grid_write_node_5_10:
+CMPLI 3 7
+JCMP $grid_write_node_5_7 0
+JMP $grid_write_node_7_10 0
+$grid_write_node_5_7:
+CMPLI 3 6
+JCMP $grid_write_cell_5 0
+JMP $grid_write_cell_6 0
+$grid_write_cell_5:
+ST 69 4
+RET 0 0
+$grid_write_cell_6:
+ST 70 4
+RET 0 0
+$grid_write_node_7_10:
+CMPLI 3 8
+JCMP $grid_write_cell_7 0
+JMP $grid_write_node_8_10 0
+$grid_write_cell_7:
+ST 71 4
+RET 0 0
+$grid_write_node_8_10:
+CMPLI 3 9
+JCMP $grid_write_cell_8 0
+JMP $grid_write_cell_9 0
+$grid_write_cell_8:
+ST 72 4
+RET 0 0
+$grid_write_cell_9:
+ST 73 4
+RET 0 0
+$grid_write_node_10_20:
+CMPLI 3 15
+JCMP $grid_write_node_10_15 0
+JMP $grid_write_node_15_20 0
+$grid_write_node_10_15:
+CMPLI 3 12
+JCMP $grid_write_node_10_12 0
+JMP $grid_write_node_12_15 0
+$grid_write_node_10_12:
+CMPLI 3 11
+JCMP $grid_write_cell_10 0
+JMP $grid_write_cell_11 0
+$grid_write_cell_10:
+ST 74 4
+RET 0 0
+$grid_write_cell_11:
+ST 75 4
+RET 0 0
+$grid_write_node_12_15:
+CMPLI 3 13
+JCMP $grid_write_cell_12 0
+JMP $grid_write_node_13_15 0
+$grid_write_cell_12:
+ST 76 4
+RET 0 0
+$grid_write_node_13_15:
+CMPLI 3 14
+JCMP $grid_write_cell_13 0
+JMP $grid_write_cell_14 0
+$grid_write_cell_13:
+ST 77 4
+RET 0 0
+$grid_write_cell_14:
+ST 78 4
+RET 0 0
+$grid_write_node_15_20:
+CMPLI 3 17
+JCMP $grid_write_node_15_17 0
+JMP $grid_write_node_17_20 0
+$grid_write_node_15_17:
+CMPLI 3 16
+JCMP $grid_write_cell_15 0
+JMP $grid_write_cell_16 0
+$grid_write_cell_15:
+ST 79 4
+RET 0 0
+$grid_write_cell_16:
+ST 80 4
+RET 0 0
+$grid_write_node_17_20:
+CMPLI 3 18
+JCMP $grid_write_cell_17 0
+JMP $grid_write_node_18_20 0
+$grid_write_cell_17:
+ST 81 4
+RET 0 0
+$grid_write_node_18_20:
+CMPLI 3 19
+JCMP $grid_write_cell_18 0
+JMP $grid_write_cell_19 0
+$grid_write_cell_18:
+ST 82 4
+RET 0 0
+$grid_write_cell_19:
+ST 83 4
+RET 0 0
+$grid_write_node_20_40:
+CMPLI 3 30
+JCMP $grid_write_node_20_30 0
+JMP $grid_write_node_30_40 0
+$grid_write_node_20_30:
+CMPLI 3 25
+JCMP $grid_write_node_20_25 0
+JMP $grid_write_node_25_30 0
+$grid_write_node_20_25:
+CMPLI 3 22
+JCMP $grid_write_node_20_22 0
+JMP $grid_write_node_22_25 0
+$grid_write_node_20_22:
+CMPLI 3 21
+JCMP $grid_write_cell_20 0
+JMP $grid_write_cell_21 0
+$grid_write_cell_20:
+ST 84 4
+RET 0 0
+$grid_write_cell_21:
+ST 85 4
+RET 0 0
+$grid_write_node_22_25:
+CMPLI 3 23
+JCMP $grid_write_cell_22 0
+JMP $grid_write_node_23_25 0
+$grid_write_cell_22:
+ST 86 4
+RET 0 0
+$grid_write_node_23_25:
+CMPLI 3 24
+JCMP $grid_write_cell_23 0
+JMP $grid_write_cell_24 0
+$grid_write_cell_23:
+ST 87 4
+RET 0 0
+$grid_write_cell_24:
+ST 88 4
+RET 0 0
+$grid_write_node_25_30:
+CMPLI 3 27
+JCMP $grid_write_node_25_27 0
+JMP $grid_write_node_27_30 0
+$grid_write_node_25_27:
+CMPLI 3 26
+JCMP $grid_write_cell_25 0
+JMP $grid_write_cell_26 0
+$grid_write_cell_25:
+ST 89 4
+RET 0 0
+$grid_write_cell_26:
+ST 90 4
+RET 0 0
+$grid_write_node_27_30:
+CMPLI 3 28
+JCMP $grid_write_cell_27 0
+JMP $grid_write_node_28_30 0
+$grid_write_cell_27:
+ST 91 4
+RET 0 0
+$grid_write_node_28_30:
+CMPLI 3 29
+JCMP $grid_write_cell_28 0
+JMP $grid_write_cell_29 0
+$grid_write_cell_28:
+ST 92 4
+RET 0 0
+$grid_write_cell_29:
+ST 93 4
+RET 0 0
+$grid_write_node_30_40:
+CMPLI 3 35
+JCMP $grid_write_node_30_35 0
+JMP $grid_write_node_35_40 0
+$grid_write_node_30_35:
+CMPLI 3 32
+JCMP $grid_write_node_30_32 0
+JMP $grid_write_node_32_35 0
+$grid_write_node_30_32:
+CMPLI 3 31
+JCMP $grid_write_cell_30 0
+JMP $grid_write_cell_31 0
+$grid_write_cell_30:
+ST 94 4
+RET 0 0
+$grid_write_cell_31:
+ST 95 4
+RET 0 0
+$grid_write_node_32_35:
+CMPLI 3 33
+JCMP $grid_write_cell_32 0
+JMP $grid_write_node_33_35 0
+$grid_write_cell_32:
+ST 96 4
+RET 0 0
+$grid_write_node_33_35:
+CMPLI 3 34
+JCMP $grid_write_cell_33 0
+JMP $grid_write_cell_34 0
+$grid_write_cell_33:
+ST 97 4
+RET 0 0
+$grid_write_cell_34:
+ST 98 4
+RET 0 0
+$grid_write_node_35_40:
+CMPLI 3 37
+JCMP $grid_write_node_35_37 0
+JMP $grid_write_node_37_40 0
+$grid_write_node_35_37:
+CMPLI 3 36
+JCMP $grid_write_cell_35 0
+JMP $grid_write_cell_36 0
+$grid_write_cell_35:
+ST 99 4
+RET 0 0
+$grid_write_cell_36:
+ST 100 4
+RET 0 0
+$grid_write_node_37_40:
+CMPLI 3 38
+JCMP $grid_write_cell_37 0
+JMP $grid_write_node_38_40 0
+$grid_write_cell_37:
+ST 101 4
+RET 0 0
+$grid_write_node_38_40:
+CMPLI 3 39
+JCMP $grid_write_cell_38 0
+JMP $grid_write_cell_39 0
+$grid_write_cell_38:
+ST 102 4
+RET 0 0
+$grid_write_cell_39:
+ST 103 4
+RET 0 0
+$grid_write_node_40_80:
+CMPLI 3 60
+JCMP $grid_write_node_40_60 0
+JMP $grid_write_node_60_80 0
+$grid_write_node_40_60:
+CMPLI 3 50
+JCMP $grid_write_node_40_50 0
+JMP $grid_write_node_50_60 0
+$grid_write_node_40_50:
+CMPLI 3 45
+JCMP $grid_write_node_40_45 0
+JMP $grid_write_node_45_50 0
+$grid_write_node_40_45:
+CMPLI 3 42
+JCMP $grid_write_node_40_42 0
+JMP $grid_write_node_42_45 0
+$grid_write_node_40_42:
+CMPLI 3 41
+JCMP $grid_write_cell_40 0
+JMP $grid_write_cell_41 0
+$grid_write_cell_40:
+ST 104 4
+RET 0 0
+$grid_write_cell_41:
+ST 105 4
+RET 0 0
+$grid_write_node_42_45:
+CMPLI 3 43
+JCMP $grid_write_cell_42 0
+JMP $grid_write_node_43_45 0
+$grid_write_cell_42:
+ST 106 4
+RET 0 0
+$grid_write_node_43_45:
+CMPLI 3 44
+JCMP $grid_write_cell_43 0
+JMP $grid_write_cell_44 0
+$grid_write_cell_43:
+ST 107 4
+RET 0 0
+$grid_write_cell_44:
+ST 108 4
+RET 0 0
+$grid_write_node_45_50:
+CMPLI 3 47
+JCMP $grid_write_node_45_47 0
+JMP $grid_write_node_47_50 0
+$grid_write_node_45_47:
+CMPLI 3 46
+JCMP $grid_write_cell_45 0
+JMP $grid_write_cell_46 0
+$grid_write_cell_45:
+ST 109 4
+RET 0 0
+$grid_write_cell_46:
+ST 110 4
+RET 0 0
+$grid_write_node_47_50:
+CMPLI 3 48
+JCMP $grid_write_cell_47 0
+JMP $grid_write_node_48_50 0
+$grid_write_cell_47:
+ST 111 4
+RET 0 0
+$grid_write_node_48_50:
+CMPLI 3 49
+JCMP $grid_write_cell_48 0
+JMP $grid_write_cell_49 0
+$grid_write_cell_48:
+ST 112 4
+RET 0 0
+$grid_write_cell_49:
+ST 113 4
+RET 0 0
+$grid_write_node_50_60:
+CMPLI 3 55
+JCMP $grid_write_node_50_55 0
+JMP $grid_write_node_55_60 0
+$grid_write_node_50_55:
+CMPLI 3 52
+JCMP $grid_write_node_50_52 0
+JMP $grid_write_node_52_55 0
+$grid_write_node_50_52:
+CMPLI 3 51
+JCMP $grid_write_cell_50 0
+JMP $grid_write_cell_51 0
+$grid_write_cell_50:
+ST 114 4
+RET 0 0
+$grid_write_cell_51:
+ST 115 4
+RET 0 0
+$grid_write_node_52_55:
+CMPLI 3 53
+JCMP $grid_write_cell_52 0
+JMP $grid_write_node_53_55 0
+$grid_write_cell_52:
+ST 116 4
+RET 0 0
+$grid_write_node_53_55:
+CMPLI 3 54
+JCMP $grid_write_cell_53 0
+JMP $grid_write_cell_54 0
+$grid_write_cell_53:
+ST 117 4
+RET 0 0
+$grid_write_cell_54:
+ST 118 4
+RET 0 0
+$grid_write_node_55_60:
+CMPLI 3 57
+JCMP $grid_write_node_55_57 0
+JMP $grid_write_node_57_60 0
+$grid_write_node_55_57:
+CMPLI 3 56
+JCMP $grid_write_cell_55 0
+JMP $grid_write_cell_56 0
+$grid_write_cell_55:
+ST 119 4
+RET 0 0
+$grid_write_cell_56:
+ST 120 4
+RET 0 0
+$grid_write_node_57_60:
+CMPLI 3 58
+JCMP $grid_write_cell_57 0
+JMP $grid_write_node_58_60 0
+$grid_write_cell_57:
+ST 121 4
+RET 0 0
+$grid_write_node_58_60:
+CMPLI 3 59
+JCMP $grid_write_cell_58 0
+JMP $grid_write_cell_59 0
+$grid_write_cell_58:
+ST 122 4
+RET 0 0
+$grid_write_cell_59:
+ST 123 4
+RET 0 0
+$grid_write_node_60_80:
+CMPLI 3 70
+JCMP $grid_write_node_60_70 0
+JMP $grid_write_node_70_80 0
+$grid_write_node_60_70:
+CMPLI 3 65
+JCMP $grid_write_node_60_65 0
+JMP $grid_write_node_65_70 0
+$grid_write_node_60_65:
+CMPLI 3 62
+JCMP $grid_write_node_60_62 0
+JMP $grid_write_node_62_65 0
+$grid_write_node_60_62:
+CMPLI 3 61
+JCMP $grid_write_cell_60 0
+JMP $grid_write_cell_61 0
+$grid_write_cell_60:
+ST 124 4
+RET 0 0
+$grid_write_cell_61:
+ST 125 4
+RET 0 0
+$grid_write_node_62_65:
+CMPLI 3 63
+JCMP $grid_write_cell_62 0
+JMP $grid_write_node_63_65 0
+$grid_write_cell_62:
+ST 126 4
+RET 0 0
+$grid_write_node_63_65:
+CMPLI 3 64
+JCMP $grid_write_cell_63 0
+JMP $grid_write_cell_64 0
+$grid_write_cell_63:
+ST 127 4
+RET 0 0
+$grid_write_cell_64:
+ST 128 4
+RET 0 0
+$grid_write_node_65_70:
+CMPLI 3 67
+JCMP $grid_write_node_65_67 0
+JMP $grid_write_node_67_70 0
+$grid_write_node_65_67:
+CMPLI 3 66
+JCMP $grid_write_cell_65 0
+JMP $grid_write_cell_66 0
+$grid_write_cell_65:
+ST 129 4
+RET 0 0
+$grid_write_cell_66:
+ST 130 4
+RET 0 0
+$grid_write_node_67_70:
+CMPLI 3 68
+JCMP $grid_write_cell_67 0
+JMP $grid_write_node_68_70 0
+$grid_write_cell_67:
+ST 131 4
+RET 0 0
+$grid_write_node_68_70:
+CMPLI 3 69
+JCMP $grid_write_cell_68 0
+JMP $grid_write_cell_69 0
+$grid_write_cell_68:
+ST 132 4
+RET 0 0
+$grid_write_cell_69:
+ST 133 4
+RET 0 0
+$grid_write_node_70_80:
+CMPLI 3 75
+JCMP $grid_write_node_70_75 0
+JMP $grid_write_node_75_80 0
+$grid_write_node_70_75:
+CMPLI 3 72
+JCMP $grid_write_node_70_72 0
+JMP $grid_write_node_72_75 0
+$grid_write_node_70_72:
+CMPLI 3 71
+JCMP $grid_write_cell_70 0
+JMP $grid_write_cell_71 0
+$grid_write_cell_70:
+ST 134 4
+RET 0 0
+$grid_write_cell_71:
+ST 135 4
+RET 0 0
+$grid_write_node_72_75:
+CMPLI 3 73
+JCMP $grid_write_cell_72 0
+JMP $grid_write_node_73_75 0
+$grid_write_cell_72:
+ST 136 4
+RET 0 0
+$grid_write_node_73_75:
+CMPLI 3 74
+JCMP $grid_write_cell_73 0
+JMP $grid_write_cell_74 0
+$grid_write_cell_73:
+ST 137 4
+RET 0 0
+$grid_write_cell_74:
+ST 138 4
+RET 0 0
+$grid_write_node_75_80:
+CMPLI 3 77
+JCMP $grid_write_node_75_77 0
+JMP $grid_write_node_77_80 0
+$grid_write_node_75_77:
+CMPLI 3 76
+JCMP $grid_write_cell_75 0
+JMP $grid_write_cell_76 0
+$grid_write_cell_75:
+ST 139 4
+RET 0 0
+$grid_write_cell_76:
+ST 140 4
+RET 0 0
+$grid_write_node_77_80:
+CMPLI 3 78
+JCMP $grid_write_cell_77 0
+JMP $grid_write_node_78_80 0
+$grid_write_cell_77:
+ST 141 4
+RET 0 0
+$grid_write_node_78_80:
+CMPLI 3 79
+JCMP $grid_write_cell_78 0
+JMP $grid_write_cell_79 0
+$grid_write_cell_78:
+ST 142 4
+RET 0 0
+$grid_write_cell_79:
+ST 143 4
+RET 0 0
+$grid_write_node_80_160:
+CMPLI 3 120
+JCMP $grid_write_node_80_120 0
+JMP $grid_write_node_120_160 0
+$grid_write_node_80_120:
+CMPLI 3 100
+JCMP $grid_write_node_80_100 0
+JMP $grid_write_node_100_120 0
+$grid_write_node_80_100:
+CMPLI 3 90
+JCMP $grid_write_node_80_90 0
+JMP $grid_write_node_90_100 0
+$grid_write_node_80_90:
+CMPLI 3 85
+JCMP $grid_write_node_80_85 0
+JMP $grid_write_node_85_90 0
+$grid_write_node_80_85:
+CMPLI 3 82
+JCMP $grid_write_node_80_82 0
+JMP $grid_write_node_82_85 0
+$grid_write_node_80_82:
+CMPLI 3 81
+JCMP $grid_write_cell_80 0
+JMP $grid_write_cell_81 0
+$grid_write_cell_80:
+ST 144 4
+RET 0 0
+$grid_write_cell_81:
+ST 145 4
+RET 0 0
+$grid_write_node_82_85:
+CMPLI 3 83
+JCMP $grid_write_cell_82 0
+JMP $grid_write_node_83_85 0
+$grid_write_cell_82:
+ST 146 4
+RET 0 0
+$grid_write_node_83_85:
+CMPLI 3 84
+JCMP $grid_write_cell_83 0
+JMP $grid_write_cell_84 0
+$grid_write_cell_83:
+ST 147 4
+RET 0 0
+$grid_write_cell_84:
+ST 148 4
+RET 0 0
+$grid_write_node_85_90:
+CMPLI 3 87
+JCMP $grid_write_node_85_87 0
+JMP $grid_write_node_87_90 0
+$grid_write_node_85_87:
+CMPLI 3 86
+JCMP $grid_write_cell_85 0
+JMP $grid_write_cell_86 0
+$grid_write_cell_85:
+ST 149 4
+RET 0 0
+$grid_write_cell_86:
+ST 150 4
+RET 0 0
+$grid_write_node_87_90:
+CMPLI 3 88
+JCMP $grid_write_cell_87 0
+JMP $grid_write_node_88_90 0
+$grid_write_cell_87:
+ST 151 4
+RET 0 0
+$grid_write_node_88_90:
+CMPLI 3 89
+JCMP $grid_write_cell_88 0
+JMP $grid_write_cell_89 0
+$grid_write_cell_88:
+ST 152 4
+RET 0 0
+$grid_write_cell_89:
+ST 153 4
+RET 0 0
+$grid_write_node_90_100:
+CMPLI 3 95
+JCMP $grid_write_node_90_95 0
+JMP $grid_write_node_95_100 0
+$grid_write_node_90_95:
+CMPLI 3 92
+JCMP $grid_write_node_90_92 0
+JMP $grid_write_node_92_95 0
+$grid_write_node_90_92:
+CMPLI 3 91
+JCMP $grid_write_cell_90 0
+JMP $grid_write_cell_91 0
+$grid_write_cell_90:
+ST 154 4
+RET 0 0
+$grid_write_cell_91:
+ST 155 4
+RET 0 0
+$grid_write_node_92_95:
+CMPLI 3 93
+JCMP $grid_write_cell_92 0
+JMP $grid_write_node_93_95 0
+$grid_write_cell_92:
+ST 156 4
+RET 0 0
+$grid_write_node_93_95:
+CMPLI 3 94
+JCMP $grid_write_cell_93 0
+JMP $grid_write_cell_94 0
+$grid_write_cell_93:
+ST 157 4
+RET 0 0
+$grid_write_cell_94:
+ST 158 4
+RET 0 0
+$grid_write_node_95_100:
+CMPLI 3 97
+JCMP $grid_write_node_95_97 0
+JMP $grid_write_node_97_100 0
+$grid_write_node_95_97:
+CMPLI 3 96
+JCMP $grid_write_cell_95 0
+JMP $grid_write_cell_96 0
+$grid_write_cell_95:
+ST 159 4
+RET 0 0
+$grid_write_cell_96:
+ST 160 4
+RET 0 0
+$grid_write_node_97_100:
+CMPLI 3 98
+JCMP $grid_write_cell_97 0
+JMP $grid_write_node_98_100 0
+$grid_write_cell_97:
+ST 161 4
+RET 0 0
+$grid_write_node_98_100:
+CMPLI 3 99
+JCMP $grid_write_cell_98 0
+JMP $grid_write_cell_99 0
+$grid_write_cell_98:
+ST 162 4
+RET 0 0
+$grid_write_cell_99:
+ST 163 4
+RET 0 0
+$grid_write_node_100_120:
+CMPLI 3 110
+JCMP $grid_write_node_100_110 0
+JMP $grid_write_node_110_120 0
+$grid_write_node_100_110:
+CMPLI 3 105
+JCMP $grid_write_node_100_105 0
+JMP $grid_write_node_105_110 0
+$grid_write_node_100_105:
+CMPLI 3 102
+JCMP $grid_write_node_100_102 0
+JMP $grid_write_node_102_105 0
+$grid_write_node_100_102:
+CMPLI 3 101
+JCMP $grid_write_cell_100 0
+JMP $grid_write_cell_101 0
+$grid_write_cell_100:
+ST 164 4
+RET 0 0
+$grid_write_cell_101:
+ST 165 4
+RET 0 0
+$grid_write_node_102_105:
+CMPLI 3 103
+JCMP $grid_write_cell_102 0
+JMP $grid_write_node_103_105 0
+$grid_write_cell_102:
+ST 166 4
+RET 0 0
+$grid_write_node_103_105:
+CMPLI 3 104
+JCMP $grid_write_cell_103 0
+JMP $grid_write_cell_104 0
+$grid_write_cell_103:
+ST 167 4
+RET 0 0
+$grid_write_cell_104:
+ST 168 4
+RET 0 0
+$grid_write_node_105_110:
+CMPLI 3 107
+JCMP $grid_write_node_105_107 0
+JMP $grid_write_node_107_110 0
+$grid_write_node_105_107:
+CMPLI 3 106
+JCMP $grid_write_cell_105 0
+JMP $grid_write_cell_106 0
+$grid_write_cell_105:
+ST 169 4
+RET 0 0
+$grid_write_cell_106:
+ST 170 4
+RET 0 0
+$grid_write_node_107_110:
+CMPLI 3 108
+JCMP $grid_write_cell_107 0
+JMP $grid_write_node_108_110 0
+$grid_write_cell_107:
+ST 171 4
+RET 0 0
+$grid_write_node_108_110:
+CMPLI 3 109
+JCMP $grid_write_cell_108 0
+JMP $grid_write_cell_109 0
+$grid_write_cell_108:
+ST 172 4
+RET 0 0
+$grid_write_cell_109:
+ST 173 4
+RET 0 0
+$grid_write_node_110_120:
+CMPLI 3 115
+JCMP $grid_write_node_110_115 0
+JMP $grid_write_node_115_120 0
+$grid_write_node_110_115:
+CMPLI 3 112
+JCMP $grid_write_node_110_112 0
+JMP $grid_write_node_112_115 0
+$grid_write_node_110_112:
+CMPLI 3 111
+JCMP $grid_write_cell_110 0
+JMP $grid_write_cell_111 0
+$grid_write_cell_110:
+ST 174 4
+RET 0 0
+$grid_write_cell_111:
+ST 175 4
+RET 0 0
+$grid_write_node_112_115:
+CMPLI 3 113
+JCMP $grid_write_cell_112 0
+JMP $grid_write_node_113_115 0
+$grid_write_cell_112:
+ST 176 4
+RET 0 0
+$grid_write_node_113_115:
+CMPLI 3 114
+JCMP $grid_write_cell_113 0
+JMP $grid_write_cell_114 0
+$grid_write_cell_113:
+ST 177 4
+RET 0 0
+$grid_write_cell_114:
+ST 178 4
+RET 0 0
+$grid_write_node_115_120:
+CMPLI 3 117
+JCMP $grid_write_node_115_117 0
+JMP $grid_write_node_117_120 0
+$grid_write_node_115_117:
+CMPLI 3 116
+JCMP $grid_write_cell_115 0
+JMP $grid_write_cell_116 0
+$grid_write_cell_115:
+ST 179 4
+RET 0 0
+$grid_write_cell_116:
+ST 180 4
+RET 0 0
+$grid_write_node_117_120:
+CMPLI 3 118
+JCMP $grid_write_cell_117 0
+JMP $grid_write_node_118_120 0
+$grid_write_cell_117:
+ST 181 4
+RET 0 0
+$grid_write_node_118_120:
+CMPLI 3 119
+JCMP $grid_write_cell_118 0
+JMP $grid_write_cell_119 0
+$grid_write_cell_118:
+ST 182 4
+RET 0 0
+$grid_write_cell_119:
+ST 183 4
+RET 0 0
+$grid_write_node_120_160:
+CMPLI 3 140
+JCMP $grid_write_node_120_140 0
+JMP $grid_write_node_140_160 0
+$grid_write_node_120_140:
+CMPLI 3 130
+JCMP $grid_write_node_120_130 0
+JMP $grid_write_node_130_140 0
+$grid_write_node_120_130:
+CMPLI 3 125
+JCMP $grid_write_node_120_125 0
+JMP $grid_write_node_125_130 0
+$grid_write_node_120_125:
+CMPLI 3 122
+JCMP $grid_write_node_120_122 0
+JMP $grid_write_node_122_125 0
+$grid_write_node_120_122:
+CMPLI 3 121
+JCMP $grid_write_cell_120 0
+JMP $grid_write_cell_121 0
+$grid_write_cell_120:
+ST 184 4
+RET 0 0
+$grid_write_cell_121:
+ST 185 4
+RET 0 0
+$grid_write_node_122_125:
+CMPLI 3 123
+JCMP $grid_write_cell_122 0
+JMP $grid_write_node_123_125 0
+$grid_write_cell_122:
+ST 186 4
+RET 0 0
+$grid_write_node_123_125:
+CMPLI 3 124
+JCMP $grid_write_cell_123 0
+JMP $grid_write_cell_124 0
+$grid_write_cell_123:
+ST 187 4
+RET 0 0
+$grid_write_cell_124:
+ST 188 4
+RET 0 0
+$grid_write_node_125_130:
+CMPLI 3 127
+JCMP $grid_write_node_125_127 0
+JMP $grid_write_node_127_130 0
+$grid_write_node_125_127:
+CMPLI 3 126
+JCMP $grid_write_cell_125 0
+JMP $grid_write_cell_126 0
+$grid_write_cell_125:
+ST 189 4
+RET 0 0
+$grid_write_cell_126:
+ST 190 4
+RET 0 0
+$grid_write_node_127_130:
+CMPLI 3 128
+JCMP $grid_write_cell_127 0
+JMP $grid_write_node_128_130 0
+$grid_write_cell_127:
+ST 191 4
+RET 0 0
+$grid_write_node_128_130:
+CMPLI 3 129
+JCMP $grid_write_cell_128 0
+JMP $grid_write_cell_129 0
+$grid_write_cell_128:
+ST 192 4
+RET 0 0
+$grid_write_cell_129:
+ST 193 4
+RET 0 0
+$grid_write_node_130_140:
+CMPLI 3 135
+JCMP $grid_write_node_130_135 0
+JMP $grid_write_node_135_140 0
+$grid_write_node_130_135:
+CMPLI 3 132
+JCMP $grid_write_node_130_132 0
+JMP $grid_write_node_132_135 0
+$grid_write_node_130_132:
+CMPLI 3 131
+JCMP $grid_write_cell_130 0
+JMP $grid_write_cell_131 0
+$grid_write_cell_130:
+ST 194 4
+RET 0 0
+$grid_write_cell_131:
+ST 195 4
+RET 0 0
+$grid_write_node_132_135:
+CMPLI 3 133
+JCMP $grid_write_cell_132 0
+JMP $grid_write_node_133_135 0
+$grid_write_cell_132:
+ST 196 4
+RET 0 0
+$grid_write_node_133_135:
+CMPLI 3 134
+JCMP $grid_write_cell_133 0
+JMP $grid_write_cell_134 0
+$grid_write_cell_133:
+ST 197 4
+RET 0 0
+$grid_write_cell_134:
+ST 198 4
+RET 0 0
+$grid_write_node_135_140:
+CMPLI 3 137
+JCMP $grid_write_node_135_137 0
+JMP $grid_write_node_137_140 0
+$grid_write_node_135_137:
+CMPLI 3 136
+JCMP $grid_write_cell_135 0
+JMP $grid_write_cell_136 0
+$grid_write_cell_135:
+ST 199 4
+RET 0 0
+$grid_write_cell_136:
+ST 200 4
+RET 0 0
+$grid_write_node_137_140:
+CMPLI 3 138
+JCMP $grid_write_cell_137 0
+JMP $grid_write_node_138_140 0
+$grid_write_cell_137:
+ST 201 4
+RET 0 0
+$grid_write_node_138_140:
+CMPLI 3 139
+JCMP $grid_write_cell_138 0
+JMP $grid_write_cell_139 0
+$grid_write_cell_138:
+ST 202 4
+RET 0 0
+$grid_write_cell_139:
+ST 203 4
+RET 0 0
+$grid_write_node_140_160:
+CMPLI 3 150
+JCMP $grid_write_node_140_150 0
+JMP $grid_write_node_150_160 0
+$grid_write_node_140_150:
+CMPLI 3 145
+JCMP $grid_write_node_140_145 0
+JMP $grid_write_node_145_150 0
+$grid_write_node_140_145:
+CMPLI 3 142
+JCMP $grid_write_node_140_142 0
+JMP $grid_write_node_142_145 0
+$grid_write_node_140_142:
+CMPLI 3 141
+JCMP $grid_write_cell_140 0
+JMP $grid_write_cell_141 0
+$grid_write_cell_140:
+ST 204 4
+RET 0 0
+$grid_write_cell_141:
+ST 205 4
+RET 0 0
+$grid_write_node_142_145:
+CMPLI 3 143
+JCMP $grid_write_cell_142 0
+JMP $grid_write_node_143_145 0
+$grid_write_cell_142:
+ST 206 4
+RET 0 0
+$grid_write_node_143_145:
+CMPLI 3 144
+JCMP $grid_write_cell_143 0
+JMP $grid_write_cell_144 0
+$grid_write_cell_143:
+ST 207 4
+RET 0 0
+$grid_write_cell_144:
+ST 208 4
+RET 0 0
+$grid_write_node_145_150:
+CMPLI 3 147
+JCMP $grid_write_node_145_147 0
+JMP $grid_write_node_147_150 0
+$grid_write_node_145_147:
+CMPLI 3 146
+JCMP $grid_write_cell_145 0
+JMP $grid_write_cell_146 0
+$grid_write_cell_145:
+ST 209 4
+RET 0 0
+$grid_write_cell_146:
+ST 210 4
+RET 0 0
+$grid_write_node_147_150:
+CMPLI 3 148
+JCMP $grid_write_cell_147 0
+JMP $grid_write_node_148_150 0
+$grid_write_cell_147:
+ST 211 4
+RET 0 0
+$grid_write_node_148_150:
+CMPLI 3 149
+JCMP $grid_write_cell_148 0
+JMP $grid_write_cell_149 0
+$grid_write_cell_148:
+ST 212 4
+RET 0 0
+$grid_write_cell_149:
+ST 213 4
+RET 0 0
+$grid_write_node_150_160:
+CMPLI 3 155
+JCMP $grid_write_node_150_155 0
+JMP $grid_write_node_155_160 0
+$grid_write_node_150_155:
+CMPLI 3 152
+JCMP $grid_write_node_150_152 0
+JMP $grid_write_node_152_155 0
+$grid_write_node_150_152:
+CMPLI 3 151
+JCMP $grid_write_cell_150 0
+JMP $grid_write_cell_151 0
+$grid_write_cell_150:
+ST 214 4
+RET 0 0
+$grid_write_cell_151:
+ST 215 4
+RET 0 0
+$grid_write_node_152_155:
+CMPLI 3 153
+JCMP $grid_write_cell_152 0
+JMP $grid_write_node_153_155 0
+$grid_write_cell_152:
+ST 216 4
+RET 0 0
+$grid_write_node_153_155:
+CMPLI 3 154
+JCMP $grid_write_cell_153 0
+JMP $grid_write_cell_154 0
+$grid_write_cell_153:
+ST 217 4
+RET 0 0
+$grid_write_cell_154:
+ST 218 4
+RET 0 0
+$grid_write_node_155_160:
+CMPLI 3 157
+JCMP $grid_write_node_155_157 0
+JMP $grid_write_node_157_160 0
+$grid_write_node_155_157:
+CMPLI 3 156
+JCMP $grid_write_cell_155 0
+JMP $grid_write_cell_156 0
+$grid_write_cell_155:
+ST 219 4
+RET 0 0
+$grid_write_cell_156:
+ST 220 4
+RET 0 0
+$grid_write_node_157_160:
+CMPLI 3 158
+JCMP $grid_write_cell_157 0
+JMP $grid_write_node_158_160 0
+$grid_write_cell_157:
+ST 221 4
+RET 0 0
+$grid_write_node_158_160:
+CMPLI 3 159
+JCMP $grid_write_cell_158 0
+JMP $grid_write_cell_159 0
+$grid_write_cell_158:
+ST 222 4
+RET 0 0
+$grid_write_cell_159:
+ST 223 4
+RET 0 0
