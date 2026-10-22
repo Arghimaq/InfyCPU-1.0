@@ -4,8 +4,8 @@ Added stack, call, ret, removed settings.py and fixed the `.iexe` bug
 
 # InfyCPU 2
 
-<img width="200" height="200" alt="python_uac8REw7OP" src="https://github.com/user-attachments/assets/1eacf84d-ccbd-45db-9de8-36d0369bcf0d" />
-Flying Pixel.iasm, ran by InfyCPU. Required size: 32x32. Minimum ROM size: 32
+<img width="500" height="600" alt="python_HwoEqXX04D" src="https://github.com/user-attachments/assets/a0eaa7d3-29bb-48de-a818-6e695f7ba646" />
+tetris.iasm. Ran by InfyCPU. Suggested screen size: 40x48. Minimum ROM size: 3600. Minimum RAM size: 2000
 
 
 
@@ -74,9 +74,9 @@ If you want to run someone else's program, look inside the `.iasm` file and look
 
 If you have made a program, you can share it in Github Discussions in the Show and tell category. I'd love to see others' creations!
 
-<img width="320" height="240" alt="python_3RG2Bh3tYf" src="https://github.com/user-attachments/assets/726d873a-d2df-46c5-86a6-e464425e29b3" />
-Platformer.iasm, ran by InfyCPU. Required size: 64x48. Minimum ROM size: 200
+<img width="800" height="600" alt="python_HKtFvi8kex" src="https://github.com/user-attachments/assets/5c71d51b-ce2b-4288-9832-caadad2d87cd" />
+gravity_slingshot.iasm, ran by InfyCPU. Required size: 64x48. Minimum ROM size: 450
 
 ## Notes
 
-If you want to look at an example to know how to program, `Platformer.iasm` is the most relevant one. It uses labels for loops.
+If you want to look at an example to know how to program, `gravity_slingshot.iasm` is the most relevant one. It uses labels for loops and calls with returns.
