@@ -50,7 +50,7 @@ with open('settings.json', 'r') as f:
 	
 
 Instruction_Size = 3
-ROM_SIZE = settings.get("rom_size")
+ROM_SIZE = settings.get("rom_size") * 3
 RAM_SIZE = settings.get("ram_size")
 STACK_SIZE = settings.get("stack_size")
 VRAM_Base_Address = 129
@@ -145,6 +145,7 @@ def get_rom(rom, ext):
 			for inst in rom:
 				ROM.append(inst)
 			leftover = ROM_SIZE - len(rom)
+			print(ROM)
 			for i in range(leftover):
 				ROM.append(0)
 		else:
@@ -170,6 +171,7 @@ def fetch():
 		return ROM[PC], ROM[PC+1], ROM[PC+2]
 	except IndexError:
 		print("Reached ROM end")
+		print(f"PC: {PC}")
 		Machine_State = False
 
 def run():
@@ -203,7 +205,7 @@ def run():
 		Registers[operand1] = operand2
 	
 	elif opcode == 5:		#SWP. Swap register values
-		Registers[operand1], Registers[operand2] = Registers[operand2], Registers[operand2]
+		Registers[operand1], Registers[operand2] = Registers[operand2], Registers[operand1]
 		
 	elif opcode == 6:		#COP. Copy register value
 		Registers[operand2] = Registers[operand1]
@@ -397,25 +399,25 @@ def run():
 		else:
 			CMP_Flag = False
 			
-	elif opcode == 51:		#CMPLi. Turn on compare flag if greater
+	elif opcode == 52:		#CMPLi. Turn on compare flag if greater
 		if Registers[operand1] < operand2:
 			CMP_Flag = True
 		else:
 			CMP_Flag = False
 	
-	elif opcode == 52:		#CMPE. Turn on compare flag if equal
+	elif opcode == 53:		#CMPE. Turn on compare flag if equal
 		if Registers[operand1] == Registers[operand2]:
 			CMP_Flag = True
 		else:
 			CMP_Flag = False
 	
-	elif opcode == 53:		#CMPG. Turn on compare flag if greater
+	elif opcode == 54:		#CMPG. Turn on compare flag if greater
 		if Registers[operand1] > Registers[operand2]:
 			CMP_Flag = True
 		else:
 			CMP_Flag = False
 			
-	elif opcode == 54:		#CMPL. Turn on compare flag if greater
+	elif opcode == 55:		#CMPL. Turn on compare flag if greater
 		if Registers[operand1] < Registers[operand2]:
 			CMP_Flag = True
 		else:
@@ -488,8 +490,7 @@ print(f"""Final Results:
 print("\nRegisters:")
 	
 for key in Registers:
-	print(f"{key}: {Registers[key]}")
-	
+	print(f"{key}: {Registers[key]}")	
 
 print("\nRegisters:")
 	
