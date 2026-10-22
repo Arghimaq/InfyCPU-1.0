@@ -5,7 +5,7 @@ Added stack, call, ret, removed settings.py and fixed the `.iexe` bug
 # InfyCPU 2
 
 <img width="500" height="600" alt="python_HwoEqXX04D" src="https://github.com/user-attachments/assets/a0eaa7d3-29bb-48de-a818-6e695f7ba646" />
-tetris.iasm. Ran by InfyCPU. Suggested screen size: 40x48. Minimum ROM size: 3600. Minimum RAM size: 2000
+tetris.iasm. Ran by InfyCPU. Suggested screen size: 40x48. Minimum ROM size: 3600. Minimum RAM size: 2000. Recommened Instructions between frames: 45
 
 
 
@@ -30,7 +30,7 @@ git clone https://github.com/Arghimaq/InfyCPU-2
 ## How to use it
 ### Programming
 
-To write a program, you have to first write it in a `.iasm` file, which stands for Infy Assembly. If you're planning to share it, its recommended to specify the required sizes for the program in comments.
+To write a program, you have to first write it in a `.iasm` file, which stands for Infy Assembly. If you're planning to share it, its recommended to specify the required sizes and instructions between frames for the program in comments.
 See [Programming.md](docs/Programming.md) to see the ISA and a tutorial how to program in more detail.
 After that, save it and use 2 methods to run it. 1st is the file dialog method:
 
@@ -62,7 +62,8 @@ You'll see something like:
     "window_width": 640,
     "window_length": 480,
     "screen_width": 64,
-    "screen_length": 48
+    "screen_length": 48,
+    "render_every": 1
 }
 ```
 
@@ -75,7 +76,7 @@ If you want to run someone else's program, look inside the `.iasm` file and look
 If you have made a program, you can share it in Github Discussions in the Show and tell category. I'd love to see others' creations!
 
 <img width="800" height="600" alt="python_HKtFvi8kex" src="https://github.com/user-attachments/assets/5c71d51b-ce2b-4288-9832-caadad2d87cd" />
-gravity_slingshot.iasm, ran by InfyCPU. Required size: 64x48. Minimum ROM size: 450
+gravity_slingshot.iasm, ran by InfyCPU. Required size: 64x48. Minimum ROM size: 450. Recommened Instructions between frames: 1
 
 ## Notes
 
